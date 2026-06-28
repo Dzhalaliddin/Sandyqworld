@@ -46,7 +46,6 @@
     .cart-count { background:#e74c3c; border-radius:50%; padding:2px 7px; font-size:0.7rem; position:absolute; top:-8px; right:-8px; }
     .admin-link { color:white; font-size:1.1rem; padding:8px 10px; border-radius:50%; background:rgba(255,255,255,0.05); text-decoration:none; }
 
-    /* ===== НАВИГАЦИЯ ===== */
     .main-nav { position:sticky; top:60px; z-index:90; background:rgba(10,10,20,0.9); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.06); padding:8px 15px; }
     .categories-nav { display:flex; flex-wrap:wrap; gap:5px; padding:4px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:20px; position:relative; overflow:visible!important; }
     .categories-drop { position:absolute; top:4px; left:4px; height:30px; background:linear-gradient(135deg,rgba(247,151,30,0.9),rgba(230,126,34,0.85)); border-radius:16px; transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index:0; box-shadow:0 4px 15px rgba(247,151,30,0.4); }
@@ -58,17 +57,18 @@
     .mobile-cat-select { display:none; width:100%; padding:10px 14px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:20px; color:white; font-size:0.9rem; outline:none; appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
     .mobile-cat-select option { background:#1a1a2e; color:white; }
 
-    /* ===== КОНТЕНТ ===== */
     .menu-container { max-width:1400px; margin:0 auto; padding:20px 15px; position:relative; z-index:1; }
     .category-page-header { font-size:1.8rem; font-weight:800; margin-bottom:20px; color:#fff; display:flex; align-items:center; gap:10px; }
     .category-page-header i { color:#f7971e; }
+    .subcategory-title { font-size:1.1rem; font-weight:600; color:rgba(255,255,255,0.6); margin:20px 0 10px; padding-left:10px; border-left:3px solid #f7971e; }
     .menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; }
 
     .menu-item { background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:visible; box-shadow:0 8px 32px rgba(0,0,0,0.3); transition:all 0.4s; position:relative; }
     .menu-item:hover { transform:translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.5); border-color:rgba(247,151,30,0.3); }
     .menu-item-image { width:100%; height:180px; object-fit:cover; border-radius:16px 16px 0 0; }
     .menu-item-content { padding:14px; position:relative; z-index:1; }
-    .menu-item-title { font-size:0.95rem; font-weight:600; margin-bottom:8px; color:#fff; }
+    .menu-item-title { font-size:0.95rem; font-weight:600; margin-bottom:4px; color:#fff; }
+    .menu-item-desc { font-size:0.75rem; color:rgba(255,255,255,0.5); margin-bottom:8px; }
     .menu-item-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
     .menu-item-price { font-size:1.2rem; font-weight:800; color:#f7971e; }
     .add-btn { background:#2ecc71; border:none; color:white; padding:7px 14px; border-radius:16px; cursor:pointer; font-weight:600; font-size:0.85rem; }
@@ -77,7 +77,6 @@
     .quantity-num { width:22px; text-align:center; font-weight:700; font-size:0.9rem; }
     .rider-trail { position:absolute; bottom:6px; left:0; height:3px; background:linear-gradient(90deg,transparent,#f7971e,#ff6b35,#f7971e,transparent); border-radius:2px; z-index:1; opacity:0; width:0; }
 
-    /* ===== КОРЗИНА ===== */
     .cart-sidebar { position:fixed; top:0; right:-100%; width:100%; max-width:420px; height:100vh; background:rgba(10,10,20,0.95); backdrop-filter:blur(30px); border-left:1px solid rgba(255,255,255,0.1); transition:right 0.4s; z-index:200; display:flex; flex-direction:column; }
     .cart-sidebar.open { right:0; }
     .cart-header { padding:15px 20px; display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); }
@@ -86,6 +85,9 @@
     .cart-content { flex:1; padding:15px; overflow-y:auto; }
     .cart-item { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
     .cart-footer { padding:15px 20px; border-top:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.5); }
+    .cart-summary { font-size:0.9rem; color:rgba(255,255,255,0.5); margin-bottom:10px; padding:10px 0; border-top:1px dashed rgba(255,255,255,0.08); }
+    .cart-summary-row { display:flex; justify-content:space-between; padding:4px 0; }
+    .cart-summary-row.total { font-weight:700; color:#f7971e; font-size:1.1rem; border-top:1px solid rgba(255,255,255,0.08); margin-top:6px; padding-top:8px; }
     .total-sum { font-size:1.2rem; font-weight:800; text-align:right; margin-bottom:10px; color:#f7971e; }
 
     .checkout-btn {
@@ -131,7 +133,6 @@
 
     @keyframes dustParticle { 0%{transform:translateY(0) scale(0.3);opacity:0.9} 100%{transform:translateY(-20px) scale(3);opacity:0} }
 
-    /* ===== АДАПТИВ ===== */
     @media (max-width:768px) {
       .header-container { gap:6px; }
       .logo h1 { font-size:1.4rem; }
@@ -172,42 +173,21 @@
 </header>
 
 <nav class="main-nav">
-  <select class="mobile-cat-select" id="mobile-cat-select" onchange="switchCategory(this.value)">
-    <option value="salads">🥗 Салаты</option>
-    <option value="deli">⭐ Деликатесы</option>
-    <option value="soups">🍲 Супы</option>
-    <option value="main">🔥 Основные</option>
-    <option value="bakery">🍞 Выпечка</option>
-    <option value="desserts">🍰 Десерты</option>
-    <option value="party">👥 Компания</option>
-    <option value="drinks">🥤 Напитки</option>
-    <option value="garnish">🥕 Гарниры</option>
-    <option value="tea">🍵 Чаи</option>
-    <option value="sauces">💧 Соусы</option>
-  </select>
-  <div class="categories-nav" id="categories-nav">
-    <div class="categories-drop" id="categories-drop"></div>
-    <button class="category-tab active" data-cat="salads" onclick="switchCategory('salads')"><i class="fas fa-leaf"></i> Салаты</button>
-    <button class="category-tab" data-cat="deli" onclick="switchCategory('deli')"><i class="fas fa-star"></i> Деликатесы</button>
-    <button class="category-tab" data-cat="soups" onclick="switchCategory('soups')"><i class="fas fa-utensil-spoon"></i> Супы</button>
-    <button class="category-tab" data-cat="main" onclick="switchCategory('main')"><i class="fas fa-fire"></i> Основные</button>
-    <button class="category-tab" data-cat="bakery" onclick="switchCategory('bakery')"><i class="fas fa-bread-slice"></i> Выпечка</button>
-    <button class="category-tab" data-cat="desserts" onclick="switchCategory('desserts')"><i class="fas fa-cake"></i> Десерты</button>
-    <button class="category-tab" data-cat="party" onclick="switchCategory('party')"><i class="fas fa-users"></i> Компания</button>
-    <button class="category-tab" data-cat="drinks" onclick="switchCategory('drinks')"><i class="fas fa-wine-glass-alt"></i> Напитки</button>
-    <button class="category-tab" data-cat="garnish" onclick="switchCategory('garnish')"><i class="fas fa-carrot"></i> Гарниры</button>
-    <button class="category-tab" data-cat="tea" onclick="switchCategory('tea')"><i class="fas fa-mug-hot"></i> Чаи</button>
-    <button class="category-tab" data-cat="sauces" onclick="switchCategory('sauces')"><i class="fas fa-droplet"></i> Соусы</button>
-  </div>
+  <select class="mobile-cat-select" id="mobile-cat-select" onchange="switchCategory(this.value)"></select>
+  <div class="categories-nav" id="categories-nav"><div class="categories-drop" id="categories-drop"></div></div>
 </nav>
 
 <main>
   <div class="menu-container"><div class="category-page" id="category-page"></div></div>
 
   <div class="cart-sidebar" id="cart-sidebar">
-    <div class="cart-header"><h2>🛒 Заказ</h2><button class="close-cart" onclick="toggleCart()">&times;</button></div>
+    <div class="cart-header"><h2>🛒 <span data-lang-key="cart_title">Заказ</span></h2><button class="close-cart" onclick="toggleCart()">&times;</button></div>
     <div class="cart-content" id="cart-content"></div>
-    <div class="cart-footer"><div class="total-sum" id="total-sum">Итого: 0 ₸</div><button class="checkout-btn" onclick="openCheckout()">🌟 Оформить заказ 🌟</button></div>
+    <div class="cart-footer">
+      <div class="cart-summary" id="cart-summary"></div>
+      <div class="total-sum" id="total-sum">Итого: 0 ₸</div>
+      <button class="checkout-btn" onclick="openCheckout()">🌟 <span data-lang-key="checkout_btn">Оформить заказ</span> 🌟</button>
+    </div>
   </div>
 
   <div class="modal" id="checkout-modal">
@@ -232,16 +212,10 @@ const JSONBIN_KEY = '$2a$10$AxIfA8p7dq6td0BYtWWuhecnyqCJbsTGoo.oWIds3H01C43GvLGu
 const JSONBIN_BIN_ID = '6a411873f5f4af5e293d0edd';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 
-async function loadOrdersFromCloud() {
-  try { const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } }); const data = await res.json(); return data.record.orders || []; }
-  catch(e) { return []; }
-}
-async function saveOrderToCloud(order) {
-  const orders = await loadOrdersFromCloud(); orders.push(order);
-  try { await fetch(JSONBIN_URL, { method: 'PUT', headers: { 'X-Master-Key': JSONBIN_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ orders }) }); return true; }
-  catch(e) { return false; }
-}
+async function loadOrdersFromCloud(){try{const r=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});const d=await r.json();return d.record.orders||[];}catch(e){return[];}}
+async function saveOrderToCloud(o){const orders=await loadOrdersFromCloud();orders.push(o);try{await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders})});return true;}catch(e){return false;}}
 
+// ===== МЕНЮ =====
 const menuData = {
   salads:{name:{ru:'Салаты',kk:'Салаттар',en:'Salads'},icon:'fa-leaf',items:[
     {id:1,name:{ru:'Салат из свежих овощей',kk:'Балғын көкөніс салаты',en:'Fresh Vegetable Salad'},price:3390,image:'images/salad-fresh.jpg',category:'salads'},
@@ -268,17 +242,20 @@ const menuData = {
     {id:18,name:{ru:'«Көл кеспе»',kk:'«Көл кеспе»',en:'«Kol kespe»'},price:4490,image:'images/kol-kespe.jpg',category:'soups'}
   ]},
   main:{name:{ru:'Основные блюда',kk:'Негізгі',en:'Main'},icon:'fa-fire',items:[
-    {id:19,name:{ru:'«Қазақ ет»',kk:'«Қазақ ет»',en:'«Qazaq et»'},price:7990,image:'images/qazaq-et.jpg',category:'main'},
-    {id:20,name:{ru:'«Борша ет»',kk:'«Борша ет»',en:'"Borsha et"'},price:8890,image:'images/borsha-et.jpg',category:'main'},
-    {id:21,name:{ru:'«Борша ет» Шоу',kk:'«Борша ет» Шоу',en:'"Borsha et" Show'},price:27990,image:'images/borsha-et-show.jpg',category:'main'},
+    {id:19,name:{ru:'«Қазақ ет» (Бешбармақ)',kk:'«Қазақ ет»',en:'«Qazaq et»'},price:7990,image:'images/qazaq-et.jpg',category:'main'},
+    {id:20,name:{ru:'«Борша ет» телятина на камнях',kk:'Таста әзірленген «Борша ет»',en:'"Borsha et"'},price:8890,image:'images/borsha-et.jpg',category:'main'},
     {id:22,name:{ru:'«Бал қуырдақ»',kk:'«Бал қуырдақ»',en:'«Bal kuyrdak»'},price:7790,image:'images/bal-kuyrdak.jpg',category:'main'},
     {id:23,name:{ru:'«Ши қуырдақ»',kk:'«Ши қуырдақ»',en:'«Shi kuyrdak»'},price:7790,image:'images/shi-kuyrdak.jpg',category:'main'},
     {id:24,name:{ru:'«Бұқпа»',kk:'«Бұқпа»',en:'«Bugpa»'},price:8890,image:'images/bugpa.jpg',category:'main'},
     {id:25,name:{ru:'«Қымыз қабырға»',kk:'«Қымыз қабырға»',en:'"Qymyz Qabyrga"'},price:8890,image:'images/qymyz-qabyrga.jpg',category:'main'},
-    {id:26,name:{ru:'Томленая шея баранины',kk:'Бұқтырылған қой мойны',en:'Braised lamb neck'},price:28990,image:'images/lamb-neck.jpg',category:'main'},
     {id:27,name:{ru:'«Қақталған қазы»',kk:'«Қақталған қазы»',en:'"Kaktalgan kazy"'},price:8890,image:'images/kaktalgan-kazy.jpg',category:'main'},
     {id:28,name:{ru:'Горная форель',kk:'Тау бақтақ балығы',en:'Mountain trout'},price:7290,image:'images/trout.jpg',category:'main'},
     {id:29,name:{ru:'«Нан салма»',kk:'«Нан салма»',en:'"Nan salma"'},price:6690,image:'images/nan-salma.jpg',category:'main'}
+  ]},
+  // ===== НОВАЯ КАТЕГОРИЯ: БЛЮДА ШОУ =====
+  show:{name:{ru:'Блюда Шоу',kk:'Шоу тағамдар',en:'Show Dishes'},icon:'fa-theater-masks',items:[
+    {id:21,name:{ru:'«Борша ет» Шоу-программа',kk:'«Борша ет» Шоу',en:'"Borsha et" Show'},price:27990,image:'images/borsha-et-show.jpg',category:'show'},
+    {id:26,name:{ru:'«Мойын» томленая шея баранины (2-3 персоны)',kk:'«Мойын» бұқтырылған қой мойны',en:'"Moiyn" braised lamb neck (2-3)'},price:28990,image:'images/lamb-neck.jpg',category:'show'},
   ]},
   bakery:{name:{ru:'Выпечка',kk:'Нан-тоқаш',en:'Bakery'},icon:'fa-bread-slice',items:[
     {id:30,name:{ru:'Бауырсаки',kk:'Бауырсақтар',en:'Baursak'},price:2290,image:'images/baursak-jam.jpg',category:'bakery'},
@@ -301,8 +278,9 @@ const menuData = {
     {id:45,name:{ru:'Мороженое',kk:'Балмұздақ',en:'Ice Cream'},price:2290,image:'images/ice-cream.jpg',category:'desserts'}
   ]},
   party:{name:{ru:'Меню на компанию',kk:'Ұжымдық мәзір',en:'Group Menu'},icon:'fa-users',items:[
-    {id:46,name:{ru:'«Сый табақ» (5-6)',kk:'«Сый табақ»',en:'"Syy tabak"'},price:72990,image:'images/syy-tabak.jpg',category:'party'},
-    {id:61,name:{ru:'«Той табақ» (5-6)',kk:'«Той табақ»',en:'"Toy tabak"'},price:72990,image:'images/toy-tabak.jpg',category:'party'},
+    {id:46,name:{ru:'«Сый табақ» баранина (5-6)',kk:'«Сый табақ»',en:'"Syy tabak"'},price:72990,image:'images/syy-tabak.jpg',category:'party'},
+    {id:61,name:{ru:'«Той табақ» из конины (5-6) с головой',kk:'«Той табақ» басымен',en:'"Toy tabak" with head (5-6)'},price:72990,image:'images/toy-tabak.jpg',category:'party',desc:{ru:'С головой барана',kk:'Қой басымен',en:'With sheep head'}},
+    {id:62,name:{ru:'«Той табақ» из конины (5-6) без головы',kk:'«Той табақ» басыз',en:'"Toy tabak" without head (5-6)'},price:59990,image:'images/toy-tabak.jpg',category:'party',desc:{ru:'Без головы',kk:'Басыз',en:'Without head'}},
     {id:47,name:{ru:'«Хан сырбаз» (5-6)',kk:'«Хан сырбаз»',en:'"Khan syrbaz"'},price:105990,image:'images/khan-syrbaz.jpg',category:'party'},
     {id:48,name:{ru:'«Қарын көмбе» (5-6)',kk:'«Қарын көмбе»',en:'"Karyn kombe"'},price:99990,image:'images/karyn-kombe.jpg',category:'party'},
     {id:49,name:{ru:'«Бел көтерер» (5-6)',kk:'«Бел көтерер»',en:'"Bel koterer"'},price:99990,image:'images/bel-koterer.jpg',category:'party'},
@@ -328,11 +306,32 @@ const menuData = {
   ]}
 };
 
-const categoryTimeMap = {salads:{icon:'🥗',timeKey:'salads'},deli:{icon:'⭐',timeKey:'deli'},soups:{icon:'🍲',timeKey:'soups'},main:{icon:'🔥',timeKey:'hot'},bakery:{icon:'🍞',timeKey:'bakery'},desserts:{icon:'🍰',timeKey:'desserts'},party:{icon:'👥',timeKey:'party'},drinks:{icon:'🥤',timeKey:'drinks'},garnish:{icon:'🥕',timeKey:'garnish'},tea:{icon:'🍵',timeKey:'tea'},sauces:{icon:'💧',timeKey:'sauces'}};
-const langDict = {ru:{salads:'Салаты',deli:'Деликатесы',soups:'Супы',main:'Основные',bakery:'Выпечка',desserts:'Десерты',party:'Компания',drinks:'Напитки',garnish:'Гарниры',tea:'Чаи',sauces:'Соусы',cart_title:'Заказ',add:'Добавить',total:'Итого'},kk:{salads:'Салаттар',deli:'Тіскебасарлар',soups:'Сорпалар',main:'Негізгі',bakery:'Нан-тоқаш',desserts:'Тәттілер',party:'Ұжымдық',drinks:'Сусындар',garnish:'Гарнирлер',tea:'Шайлар',sauces:'Тұздықтар',cart_title:'Тапсырыс',add:'Қосу',total:'Барлығы'},en:{salads:'Salads',deli:'Delicacies',soups:'Soups',main:'Main',bakery:'Bakery',desserts:'Desserts',party:'Group',drinks:'Drinks',garnish:'Sides',tea:'Tea',sauces:'Sauces',cart_title:'Order',add:'Add',total:'Total'}};
+const categoryTimeMap = {salads:{icon:'🥗',timeKey:'salads'},deli:{icon:'⭐',timeKey:'deli'},soups:{icon:'🍲',timeKey:'soups'},main:{icon:'🔥',timeKey:'hot'},show:{icon:'🎭',timeKey:'show'},bakery:{icon:'🍞',timeKey:'bakery'},desserts:{icon:'🍰',timeKey:'desserts'},party:{icon:'👥',timeKey:'party'},drinks:{icon:'🥤',timeKey:'drinks'},garnish:{icon:'🥕',timeKey:'garnish'},tea:{icon:'🍵',timeKey:'tea'},sauces:{icon:'💧',timeKey:'sauces'}};
+const langDict = {
+  ru:{salads:'Салаты',deli:'Деликатесы',soups:'Супы',main:'Основные',show:'Блюда Шоу',bakery:'Выпечка',desserts:'Десерты',party:'Компания',drinks:'Напитки',garnish:'Гарниры',tea:'Чаи',sauces:'Соусы',cart_title:'Заказ',checkout_btn:'Оформить заказ',add:'Добавить',total:'Итого',subtotal:'Сумма',service:'Сервис 15%'},
+  kk:{salads:'Салаттар',deli:'Тіскебасарлар',soups:'Сорпалар',main:'Негізгі',show:'Шоу тағамдар',bakery:'Нан-тоқаш',desserts:'Тәттілер',party:'Ұжымдық',drinks:'Сусындар',garnish:'Гарнирлер',tea:'Шайлар',sauces:'Тұздықтар',cart_title:'Тапсырыс',checkout_btn:'Тапсырыс беру',add:'Қосу',total:'Барлығы',subtotal:'Сома',service:'Қызмет 15%'},
+  en:{salads:'Salads',deli:'Delicacies',soups:'Soups',main:'Main',show:'Show Dishes',bakery:'Bakery',desserts:'Desserts',party:'Group',drinks:'Drinks',garnish:'Sides',tea:'Tea',sauces:'Sauces',cart_title:'Order',checkout_btn:'Checkout',add:'Add',total:'Total',subtotal:'Subtotal',service:'Service 15%'}
+};
 
 let currentLang='ru',cart=[],currentCategory='salads';
 const GIF_URL='sprites/horse.gif';
+
+function buildNav(){
+  const nav=document.getElementById('categories-nav');
+  const sel=document.getElementById('mobile-cat-select');
+  let h='<div class="categories-drop" id="categories-drop"></div>';
+  let opts='';
+  // Порядок категорий
+  const order=['salads','deli','soups','main','show','bakery','desserts','party','drinks','garnish','tea','sauces'];
+  for(const k of order){
+    const cat=menuData[k];
+    if(!cat)continue;
+    h+=`<button class="category-tab" data-cat="${k}" onclick="switchCategory('${k}')"><i class="fas ${cat.icon}"></i> <span data-lang-key="${k}">${cat.name[currentLang]}</span></button>`;
+    opts+=`<option value="${k}">${cat.name[currentLang]}</option>`;
+  }
+  nav.innerHTML=h;
+  if(sel)sel.innerHTML=opts;
+}
 
 function switchCategory(k){
   currentCategory=k;
@@ -344,12 +343,58 @@ function switchCategory(k){
   moveDrop(k);
   renderCategoryPage(k);
 }
-function moveDrop(k){const tab=document.querySelector(`.category-tab[data-cat="${k}"]`),drop=document.getElementById('categories-drop'),nav=document.getElementById('categories-nav');if(tab&&drop&&nav){const nr=nav.getBoundingClientRect(),tr=tab.getBoundingClientRect();drop.style.left=(tr.left-nr.left)+'px';drop.style.width=tr.width+'px';drop.style.top=(tr.top-nr.top)+'px';drop.style.height=tr.height+'px';}}
-function searchMenu(){const q=document.getElementById('search-input').value.trim().toLowerCase();document.getElementById('search-clear').style.display=q.length>0?'block':'none';if(q.length>0){let f=[];for(const k in menuData){f.push(...menuData[k].items.filter(i=>(i.name.ru||'').toLowerCase().includes(q)));}document.getElementById('category-page').innerHTML=f.length?`<div class="menu-grid">${f.map(renderItem).join('')}</div>`:'<p style="text-align:center;opacity:0.5;padding:40px;">Ничего не найдено</p>';}else{renderCategoryPage(currentCategory);}}
+
+function moveDrop(k){
+  const tab=document.querySelector(`.category-tab[data-cat="${k}"]`),drop=document.getElementById('categories-drop'),nav=document.getElementById('categories-nav');
+  if(tab&&drop&&nav){
+    const nr=nav.getBoundingClientRect(),tr=tab.getBoundingClientRect();
+    drop.style.left=(tr.left-nr.left)+'px';drop.style.width=tr.width+'px';
+    drop.style.top=(tr.top-nr.top)+'px';drop.style.height=tr.height+'px';
+  }
+}
+
+function searchMenu(){
+  const q=document.getElementById('search-input').value.trim().toLowerCase();
+  document.getElementById('search-clear').style.display=q.length>0?'block':'none';
+  if(q.length>0){
+    let f=[];
+    for(const k in menuData){f.push(...menuData[k].items.filter(i=>(i.name.ru||'').toLowerCase().includes(q)));}
+    document.getElementById('category-page').innerHTML=f.length?`<div class="menu-grid">${f.map(renderItem).join('')}</div>`:'<p style="text-align:center;opacity:0.5;padding:40px;">Ничего не найдено</p>';
+  }else{renderCategoryPage(currentCategory);}
+}
+
 function clearSearch(){document.getElementById('search-input').value='';document.getElementById('search-clear').style.display='none';renderCategoryPage(currentCategory);}
-function renderCategoryPage(k){const pg=document.getElementById('category-page'),c=menuData[k];if(c)pg.innerHTML=`<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div><div class="menu-grid">${c.items.map(renderItem).join('')}</div>`;}
-function renderItem(item){const ci=cart.find(c=>c.id===item.id),qty=ci?ci.quantity:0;return `<div class="menu-item" id="item-${item.id}"><img src="${item.image||'https://via.placeholder.com/300x180'}" class="menu-item-image" onerror="this.src='https://via.placeholder.com/300x180'"><div class="menu-item-content"><div class="menu-item-title">${item.name[currentLang]||item.name.ru}</div><div class="menu-item-footer"><span class="menu-item-price">${item.price.toLocaleString()} ₸</span>${qty>0?`<div class="quantity-control"><button class="quantity-btn" onclick="changeQuantity(${item.id},-1)">−</button><span class="quantity-num">${qty}</span><button class="quantity-btn" onclick="changeQuantity(${item.id},1)">+</button></div>`:`<button class="add-btn" onclick="addToCart(${item.id})">${langDict[currentLang]?.add||'Добавить'}</button>`}</div><div class="rider-trail" id="trail-${item.id}"></div></div></div>`;}
-function setLanguage(l){currentLang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));document.querySelectorAll('[data-lang-key]').forEach(el=>{const k=el.getAttribute('data-lang-key');if(langDict[l]?.[k])el.textContent=langDict[l][k];});renderCategoryPage(currentCategory);updateCart();}
+
+function renderCategoryPage(k){
+  const pg=document.getElementById('category-page'),c=menuData[k];
+  if(!c)return;
+  // Если есть подкатегории (для party с Той табак)
+  if(c.subcategories){
+    let h=`<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div>`;
+    for(const sk in c.subcategories){
+      h+=`<div class="subcategory-title">${c.subcategories[sk].name[currentLang]}</div><div class="menu-grid">${c.subcategories[sk].items.map(renderItem).join('')}</div>`;
+    }
+    pg.innerHTML=h;
+  }else{
+    pg.innerHTML=`<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div><div class="menu-grid">${c.items.map(renderItem).join('')}</div>`;
+  }
+}
+
+function renderItem(item){
+  const ci=cart.find(c=>c.id===item.id),qty=ci?ci.quantity:0;
+  const desc=item.desc?item.desc[currentLang]:'';
+  return `<div class="menu-item" id="item-${item.id}"><img src="${item.image||'https://via.placeholder.com/300x180'}" class="menu-item-image" onerror="this.src='https://via.placeholder.com/300x180'"><div class="menu-item-content"><div class="menu-item-title">${item.name[currentLang]||item.name.ru}</div>${desc?`<div class="menu-item-desc">${desc}</div>`:''}<div class="menu-item-footer"><span class="menu-item-price">${item.price.toLocaleString()} ₸</span>${qty>0?`<div class="quantity-control"><button class="quantity-btn" onclick="changeQuantity(${item.id},-1)">−</button><span class="quantity-num">${qty}</span><button class="quantity-btn" onclick="changeQuantity(${item.id},1)">+</button></div>`:`<button class="add-btn" onclick="addToCart(${item.id})">${langDict[currentLang]?.add||'Добавить'}</button>`}</div><div class="rider-trail" id="trail-${item.id}"></div></div></div>`;
+}
+
+function setLanguage(l){
+  currentLang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  document.querySelectorAll('[data-lang-key]').forEach(el=>{const k=el.getAttribute('data-lang-key');if(langDict[l]?.[k])el.textContent=langDict[l][k];});
+  buildNav();
+  renderCategoryPage(currentCategory);
+  updateCart();
+}
+
 function findItemById(id){for(const k in menuData){const f=menuData[k].items.find(i=>i.id===id);if(f)return f;}return null;}
 function addToCart(id){const item=findItemById(id);if(!item)return;const ex=cart.find(c=>c.id===id);if(!ex)cart.push({...item,quantity:1});else ex.quantity+=1;updateCart();refreshView();runHorse(id);}
 function changeQuantity(id,d){const ci=cart.find(c=>c.id===id);if(!ci)return;ci.quantity+=d;if(ci.quantity<=0)cart=cart.filter(c=>c.id!==id);else if(d>0)runHorse(id);updateCart();refreshView();}
@@ -359,23 +404,32 @@ function refreshView(){document.getElementById('search-input').value?searchMenu(
 
 function updateCart(){
   document.getElementById('cart-count').textContent=cart.reduce((s,i)=>s+i.quantity,0);
-  const tot=cart.reduce((s,i)=>s+i.price*i.quantity,0);
+  const sub=cart.reduce((s,i)=>s+i.price*i.quantity,0),serv=Math.round(sub*0.15),tot=sub+serv;
   document.getElementById('total-sum').textContent=`${langDict[currentLang]?.total||'Итого'}: ${tot.toLocaleString()} ₸`;
-  const backBtn = window.innerWidth <= 480 ? '<button class="back-btn" onclick="toggleCart()">← Продолжить покупки</button>' : '';
+  const summary=document.getElementById('cart-summary');
+  if(summary&&cart.length)summary.innerHTML=`<div class="cart-summary-row"><span>${langDict[currentLang]?.subtotal}:</span><span>${sub.toLocaleString()} ₸</span></div><div class="cart-summary-row"><span>${langDict[currentLang]?.service}:</span><span>${serv.toLocaleString()} ₸</span></div><div class="cart-summary-row total"><span>${langDict[currentLang]?.total}:</span><span>${tot.toLocaleString()} ₸</span></div>`;
+  else if(summary)summary.innerHTML='';
+  const backBtn=window.innerWidth<=480?'<button class="back-btn" onclick="toggleCart()">← Продолжить покупки</button>':'';
   document.getElementById('cart-content').innerHTML=cart.length?backBtn+cart.map(i=>`<div class="cart-item"><div><b>${i.name.ru||''}</b> ×${i.quantity}</div><div>${(i.price*i.quantity).toLocaleString()} ₸</div><div><button onclick="changeQuantity(${i.id},-1)" style="background:#e74c3c;color:white;border:none;border-radius:50%;width:24px;height:24px;">−</button> <button onclick="changeQuantity(${i.id},1)" style="background:#2ecc71;color:white;border:none;border-radius:50%;width:24px;height:24px;">+</button></div></div>`).join(''):'<p style="text-align:center;opacity:0.5">Корзина пуста</p>';
 }
 
 function toggleCart(){
-  const sidebar = document.getElementById('cart-sidebar');
+  const sidebar=document.getElementById('cart-sidebar');
   sidebar.classList.toggle('open');
-  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+  document.body.style.overflow=sidebar.classList.contains('open')?'hidden':'';
 }
 
 function openCheckout(){if(!cart.length)return;const cats=[...new Set(cart.map(i=>i.category))];const sched=document.getElementById('time-schedule');if(sched)sched.innerHTML=cats.map(cat=>`<div class="time-category-group"><label>${(categoryTimeMap[cat]||{icon:'📦'}).icon} ${langDict[currentLang]?.[cat]||cat}</label><input type="time" id="time-${(categoryTimeMap[cat]||{timeKey:cat}).timeKey}"></div>`).join('');document.getElementById('order-date').value=new Date().toISOString().slice(0,10);document.getElementById('checkout-modal').classList.add('open');}
 function closeCheckout(){document.getElementById('checkout-modal').classList.remove('open');}
 async function submitOrder(){const name=document.getElementById('guest-name').value.trim(),phone=document.getElementById('guest-phone').value.trim(),date=document.getElementById('order-date').value;if(!name||!phone||!date){const t=document.getElementById('toast');t.textContent='❌ Заполните все поля!';t.className='toast error show';setTimeout(()=>t.classList.remove('show'),2000);return;}const times={};[...new Set(cart.map(i=>i.category))].forEach(c=>{const tk=(categoryTimeMap[c]||{timeKey:c}).timeKey;const inp=document.getElementById('time-'+tk);if(inp)times[tk]=inp.value;});const tot=cart.reduce((s,i)=>s+i.price*i.quantity,0);const order={id:Date.now(),restaurant:'Sandyq Алматы, Абылайхана 55',guest:{name,phone},date,items:cart.map(i=>({id:i.id,name:i.name,price:i.price,quantity:i.quantity,category:i.category})),times,special:document.getElementById('special-requests')?.value||'',total:tot,timestamp:new Date().toISOString()};const saved=await saveOrderToCloud(order);cart=[];updateCart();refreshView();closeCheckout();document.getElementById('guest-name').value='';document.getElementById('guest-phone').value='';document.getElementById('special-requests').value='';document.querySelectorAll('#time-schedule input').forEach(el=>el.value='');const t=document.getElementById('toast');t.textContent=saved?'✅ Заказ отправлен!':'⚠️ Ошибка';t.className='toast success show';setTimeout(()=>t.classList.remove('show'),2000);}
 
-document.addEventListener('DOMContentLoaded',()=>{renderCategoryPage('salads');updateCart();moveDrop('salads');window.addEventListener('resize',()=>moveDrop(currentCategory));});
+document.addEventListener('DOMContentLoaded',()=>{
+  buildNav();
+  renderCategoryPage('salads');
+  updateCart();
+  moveDrop('salads');
+  window.addEventListener('resize',()=>moveDrop(currentCategory));
+});
 </script>
 </body>
 </html>
