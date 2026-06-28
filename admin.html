@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Админ-панель — Sandyq Алматы</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo"><h1>📊 Sandyq Admin</h1><span class="subtitle">Панель управления</span><span class="address">📍 Алматы, Абылайхана 55</span></div>
+    <div class="header-controls"><a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> На сайт</a></div>
+  </div>
+</header>
+<div class="admin-container">
+  <div class="admin-header">
+    <div class="admin-nav">
+      <a href="#" class="active" onclick="loadOrders();return false;"><i class="fas fa-clipboard-list"></i> Заказы</a>
+      <a href="#" onclick="downloadAllOrders();return false;"><i class="fas fa-download"></i> Скачать</a>
+      <a href="#" class="danger" onclick="clearAllOrders();return false;"><i class="fas fa-trash-alt"></i> Очистить</a>
+    </div>
+    <div class="total-orders"><i class="fas fa-shopping-bag"></i> Заказов: <span id="orders-count">0</span></div>
+  </div>
+  <div class="date-filter">
+    <label style="color:rgba(255,255,255,0.7);">📅 Дата:</label>
+    <input type="date" id="filter-date" onchange="filterByDate()" />
+    <button class="btn btn-print" onclick="document.getElementById('filter-date').value='';loadOrders();">Сбросить</button>
+  </div>
+  <div class="stats-grid" id="stats-container"></div>
+  <div class="dishes-stats" id="dishes-stats"></div>
+  <div id="orders-list"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
