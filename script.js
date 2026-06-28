@@ -147,14 +147,16 @@ function switchCategory(catKey) {
   renderCategoryPage(catKey);
 }
 
-function moveDrop(catKey) {
-  const tab = document.querySelector(`.category-tab[data-cat="${catKey}"]`);
-  const drop = document.getElementById('categories-drop');
-  const nav = document.getElementById('categories-nav');
-  if (tab && drop && nav) {
-    const nr = nav.getBoundingClientRect(), tr = tab.getBoundingClientRect();
-    drop.style.left = (tr.left - nr.left) + 'px';
-    drop.style.width = tr.width + 'px';
+function moveDrop(k){
+  const tab=document.querySelector(`.category-tab[data-cat="${k}"]`);
+  const drop=document.getElementById('categories-drop');
+  const nav=document.getElementById('categories-nav');
+  if(tab&&drop&&nav){
+    const nr=nav.getBoundingClientRect(),tr=tab.getBoundingClientRect();
+    drop.style.left=(tr.left-nr.left)+'px';
+    drop.style.width=tr.width+'px';
+    drop.style.top=(tr.top-nr.top)+'px';
+    drop.style.height=tr.height+'px';
   }
 }
 
