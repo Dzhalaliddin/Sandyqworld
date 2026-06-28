@@ -217,16 +217,34 @@ header {
 ::-webkit-scrollbar-thumb { background:rgba(247,151,30,0.3); border-radius:3px; }
 
 @media (max-width:768px) {
-  .header-container { flex-direction:column; gap:10px; }
+  .header-container { flex-direction:column; gap:8px; }
   .header-center { max-width:100%; margin:0; order:3; }
-  .main-nav { top:135px; }
+  .main-nav { top:auto; position:relative; }
   .menu-grid { grid-template-columns:1fr 1fr; }
   .time-schedule { grid-template-columns:1fr; }
   .cart-sidebar { width:100%; right:-100%; }
-  .stats-grid { grid-template-columns:1fr 1fr; }
+  .logo h1 { font-size:1.5rem; }
+  .subtitle { font-size:0.7rem; }
+  .address { font-size:0.65rem; }
+  .category-tab { padding:6px 10px; font-size:0.7rem; }
+  .categories-nav { gap:4px; padding:4px; }
+  .category-page-header { font-size:1.4rem; }
+  .menu-item-image { height:150px; }
+  .menu-item-title { font-size:0.85rem; }
+  .menu-item-price { font-size:1rem; }
+  .add-btn { padding:6px 12px; font-size:0.8rem; }
+  .quantity-btn { width:26px; height:26px; }
 }
+
 @media (max-width:480px) {
   .menu-grid { grid-template-columns:1fr; }
-  .category-tab { font-size:0.78rem; padding:8px 11px; }
-  .stats-grid { grid-template-columns:1fr; }
+  .header-center { max-width:100%; }
+  .search-box { padding:6px 10px; }
+  .categories-nav { gap:3px; padding:3px; overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
+  .category-tab { padding:5px 8px; font-size:0.65rem; white-space:nowrap; flex-shrink:0; }
+  .category-tab i { margin-right:2px; }
+  .logo h1 { font-size:1.3rem; }
+  .cart-btn { padding:8px 14px; font-size:0.9rem; }
+  .modal-content { padding:15px; }
+  .form-group input { padding:8px 12px; font-size:0.85rem; }
 }
