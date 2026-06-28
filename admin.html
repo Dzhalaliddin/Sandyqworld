@@ -74,7 +74,7 @@
     <div><h1>📊 Sandyq Admin</h1><p style="opacity:0.6">📍 Алматы, Абылайхана 55 | ☁️ Облачное хранение</p></div>
     <div class="admin-nav">
       <button class="btn-refresh" onclick="loadOrders()">🔄 Обновить</button>
-      <a href="#" onclick="downloadAllPDF();return false">📄 Скачать PDF</a>
+      <a href="#" onclick="downloadAllPDF();return false">📄 Все заказы PDF</a>
       <a href="#" onclick="clearAllOrders();return false" style="color:#e74c3c">🗑️ Очистить</a>
       <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
     </div>
@@ -93,174 +93,147 @@
 </div>
 
 <script>
-// ===== КОНФИГУРАЦИЯ =====
-const ADMIN_PASSWORD = 'Sandyq2026';
+const ADMIN_PASSWORD = 'Sandyq2024';
 const JSONBIN_KEY = '$2a$10$AxIfA8p7dq6td0BYtWWuhecnyqCJbsTGoo.oWIds3H01C43GvLGuu';
 const JSONBIN_BIN_ID = '6a411873f5f4af5e293d0edd';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 let allOrders = [];
 
-// ===== АВТОРИЗАЦИЯ =====
 function checkPassword(){
-  const pass = document.getElementById('password').value;
-  if(pass === ADMIN_PASSWORD){
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-panel').style.display = 'block';
-    document.body.style.display = 'block';
-    document.body.style.alignItems = 'flex-start';
+  if(document.getElementById('password').value === ADMIN_PASSWORD){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.body.style.display='block';
+    document.body.style.alignItems='flex-start';
     localStorage.setItem('admin_logged_in','true');
     loadOrders();
-  } else {
-    document.getElementById('error').style.display = 'block';
-  }
+  }else{document.getElementById('error').style.display='block';}
 }
-
-function logout(){
-  localStorage.removeItem('admin_logged_in');
-  location.reload();
-}
-
-if(localStorage.getItem('admin_logged_in') === 'true'){
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('admin-panel').style.display = 'block';
-  document.body.style.display = 'block';
-  document.body.style.alignItems = 'flex-start';
+function logout(){localStorage.removeItem('admin_logged_in');location.reload();}
+if(localStorage.getItem('admin_logged_in')==='true'){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-panel').style.display='block';
+  document.body.style.display='block';
+  document.body.style.alignItems='flex-start';
   loadOrders();
 }
 
-// ===== ЗАГРУЗКА ИЗ ОБЛАКА =====
-async function loadOrders(filterDate = ''){
-  try {
-    const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
-    const data = await res.json();
-    allOrders = data.record.orders || [];
-  } catch(e) { allOrders = []; }
+async function loadOrders(filterDate=''){
+  try{const r=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});const d=await r.json();allOrders=d.record.orders||[];}catch(e){allOrders=[];}
+  let orders=allOrders;
+  if(filterDate)orders=orders.filter(o=>o.date===filterDate);
+  document.getElementById('orders-count').textContent=orders.length;
+  const rev=orders.reduce((s,o)=>s+(o.total||0),0);
+  const items=orders.reduce((s,o)=>s+(o.items||[]).reduce((ss,i)=>ss+(i.quantity||1),0),0);
+  document.getElementById('stats-container').innerHTML=`<div class="stat-card"><div class="stat-value">${orders.length}</div><div class="stat-label">Заказов</div></div><div class="stat-card"><div class="stat-value">${rev.toLocaleString()} ₸</div><div class="stat-label">Выручка</div></div><div class="stat-card"><div class="stat-value">${items}</div><div class="stat-label">Позиций</div></div>`;
+  const map={};orders.forEach(o=>(o.items||[]).forEach(i=>{const k=i.name?.ru||i.name||'Блюдо';if(!map[k])map[k]={name:k,qty:0};map[k].qty+=(i.quantity||1);}));
+  document.getElementById('dishes-stats').innerHTML='<h4 style="margin-bottom:15px">📊 Популярность блюд</h4>'+Object.values(map).sort((a,b)=>b.qty-a.qty).map(d=>`<div class="dish-stat-row"><span>${d.name}</span><span class="dish-stat-qty">×${d.qty}</span></div>`).join('');
+  const list=document.getElementById('orders-list');
+  if(!orders.length){list.innerHTML='<div class="empty-orders"><p>Нет заказов</p></div>';return;}
+  list.innerHTML=[...orders].reverse().map((o,idx)=>{const ri=orders.length-1-idx;return`<div class="order-card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px"><div><b>#${o.id}</b> 👤 ${o.guest?.name||'—'} 📞 ${o.guest?.phone||'—'}</div><div>📅 ${o.date||'—'}</div></div>${(o.items||[]).map(i=>`<div style="display:flex;justify-content:space-between;padding:3px 0"><span>${i.name?.ru||'Блюдо'} ×${i.quantity||1}</span><span>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</span></div>`).join('')}${o.times&&Object.keys(o.times).length?`<div style="margin-top:8px;font-size:0.85rem;opacity:0.7">⏰ ${Object.entries(o.times).map(([k,v])=>`${k}:${v||'—'}`).join(' | ')}</div>`:''}${o.special?`<p style="font-size:0.85rem;opacity:0.7;margin-top:5px">💬 ${o.special}</p>`:''}<div class="order-total">💰 ${(o.total||0).toLocaleString()} ₸</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-print" onclick="printOrder(${ri})">🖨️ Печать</button><button class="btn btn-pdf" onclick="downloadOrderPDF(${ri})">📄 PDF</button><button class="btn btn-delete" onclick="deleteOrder(${ri})">🗑️ Удалить</button></div></div>`}).join('');}
 
-  let orders = allOrders;
-  if(filterDate) orders = orders.filter(o => o.date === filterDate);
-
-  document.getElementById('orders-count').textContent = orders.length;
-
-  const stats = document.getElementById('stats-container');
-  const dishes = document.getElementById('dishes-stats');
-  const rev = orders.reduce((s,o) => s + (o.total || 0), 0);
-  const items = orders.reduce((s,o) => s + (o.items || []).reduce((ss,i) => ss + (i.quantity || 1), 0), 0);
-  
-  stats.innerHTML = `
-    <div class="stat-card"><div class="stat-value">${orders.length}</div><div class="stat-label">Заказов</div></div>
-    <div class="stat-card"><div class="stat-value">${rev.toLocaleString()} ₸</div><div class="stat-label">Выручка</div></div>
-    <div class="stat-card"><div class="stat-value">${items}</div><div class="stat-label">Позиций</div></div>
-  `;
-
-  const map = {};
-  orders.forEach(o => (o.items || []).forEach(i => {
-    const k = i.name?.ru || i.name || 'Блюдо';
-    if(!map[k]) map[k] = { name: k, qty: 0 };
-    map[k].qty += (i.quantity || 1);
-  }));
-  
-  dishes.innerHTML = '<h4 style="margin-bottom:15px">📊 Популярность блюд</h4>' + 
-    Object.values(map).sort((a,b) => b.qty - a.qty)
-    .map(d => `<div class="dish-stat-row"><span>${d.name}</span><span class="dish-stat-qty">×${d.qty}</span></div>`)
-    .join('');
-
-  const list = document.getElementById('orders-list');
-  if(!orders.length) { list.innerHTML = '<div class="empty-orders"><p>Нет заказов</p></div>'; return; }
-
-  list.innerHTML = [...orders].reverse().map((o, idx) => {
-    const ri = orders.length - 1 - idx;
-    return `<div class="order-card">
-      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-        <div><b>#${o.id}</b> 👤 ${o.guest?.name || '—'} 📞 ${o.guest?.phone || '—'}</div>
-        <div>📅 ${o.date || '—'}</div>
-      </div>
-      ${(o.items || []).map(i => `<div style="display:flex;justify-content:space-between;padding:3px 0"><span>${i.name?.ru||'Блюдо'} ×${i.quantity||1}</span><span>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</span></div>`).join('')}
-      ${o.times&&Object.keys(o.times).length?`<div style="margin-top:8px;font-size:0.85rem;opacity:0.7">⏰ ${Object.entries(o.times).map(([k,v])=>`${k}:${v||'—'}`).join(' | ')}</div>`:''}
-      ${o.special?`<p style="font-size:0.85rem;opacity:0.7;margin-top:5px">💬 ${o.special}</p>`:''}
-      <div class="order-total">💰 ${(o.total||0).toLocaleString()} ₸</div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn btn-print" onclick="printOrder(${ri})">🖨️ Печать</button>
-        <button class="btn btn-pdf" onclick="downloadOrderPDF(${ri})">📄 PDF</button>
-        <button class="btn btn-delete" onclick="deleteOrder(${ri})">🗑️ Удалить</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ===== PDF =====
-function downloadOrderPDF(idx){
-  const o = allOrders[idx]; if(!o) return;
-  const w = window.open('','','width=900,height=700');
+// ===== ПЕЧАТЬ С КРАСИВЫМ ЧЕКОМ =====
+function printOrder(idx){
+  const o=allOrders[idx];if(!o)return;
+  const w=window.open('','','width=850,height=700');
   w.document.write(`<html><head><title>Заказ #${o.id} - Sandyq</title><style>
-    body{font-family:Arial,sans-serif;padding:40px;color:#333}
-    .header{border-bottom:2px solid #f7971e;padding-bottom:15px;margin-bottom:20px}
-    h1{color:#f7971e;margin:0} .sub{color:#888;font-size:14px}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Georgia','Times New Roman',serif;padding:50px;color:#2a1508;background:#fdfaf4}
+    .receipt{max-width:700px;margin:0 auto;border:2px solid #c49a2a;border-radius:12px;padding:40px;background:#fffdf7;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+    .header{text-align:center;border-bottom:2px solid #c49a2a;padding-bottom:20px;margin-bottom:25px}
+    .header h1{font-size:32px;color:#8B6914;letter-spacing:2px;margin-bottom:5px}
+    .header .ornament{font-size:20px;color:#c49a2a;letter-spacing:8px;margin:5px 0}
+    .header .address{font-size:14px;color:#8B7355}
+    .info{display:flex;justify-content:space-between;margin-bottom:25px;font-size:15px;padding:15px;background:#fdf5e6;border-radius:8px}
+    .info .guest{font-weight:bold;font-size:16px}
+    .info .datetime{text-align:right;color:#8B7355}
     table{width:100%;border-collapse:collapse;margin:20px 0}
-    th{background:#f5f0eb;padding:10px;text-align:left}
-    td{padding:10px;border-bottom:1px solid #eee}
-    .total{text-align:right;font-size:18px;font-weight:bold;color:#f7971e;margin-top:20px}
-    .footer{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;display:flex;justify-content:space-between;font-size:12px;color:#999}
-    @media print{body{padding:20px}}
+    th{background:#c49a2a;color:white;padding:12px 15px;text-align:left;font-size:14px;text-transform:uppercase;letter-spacing:1px}
+    th:first-child{border-radius:8px 0 0 0}
+    th:last-child{border-radius:0 8px 0 0}
+    td{padding:12px 15px;border-bottom:1px solid #e8d5b5;font-size:15px}
+    tr:last-child td{border-bottom:none}
+    .amount{text-align:right}
+    .total-row{background:#fdf5e6;font-weight:bold}
+    .total-row td{border-top:2px solid #c49a2a;font-size:18px;color:#8B6914;padding:15px}
+    .footer{margin-top:30px;display:flex;justify-content:space-between;align-items:flex-end}
+    .footer .signature{text-align:center;width:45%}
+    .footer .line{border-top:1px solid #8B7355;margin-top:40px;margin-bottom:5px}
+    .footer .label{font-size:12px;color:#8B7355;text-transform:uppercase;letter-spacing:1px}
+    .stamp{width:80px;height:80px;border:3px solid #c49a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c49a2a;font-size:12px;text-align:center;transform:rotate(-15deg);opacity:0.7;position:absolute;right:60px;bottom:60px}
+    .stamp div{line-height:1.2}
+    @media print{body{padding:0;background:white}.receipt{border:none;box-shadow:none;padding:30px}}
   </style></head><body>
-    <div class="header"><h1>🍽️ Sandyq Алматы</h1><div class="sub">Абылайхана 55 | Заказ #${o.id} | 📅 ${o.date||'—'}</div></div>
-    <p><strong>👤 Гость:</strong> ${o.guest?.name||'—'} | <strong>📞 Телефон:</strong> ${o.guest?.phone||'—'}</p>
-    ${o.special?`<p><strong>💬 Пожелания:</strong> ${o.special}</p>`:''}
-    ${o.times&&Object.keys(o.times).length?`<p><strong>⏰ Время подачи:</strong> ${Object.entries(o.times).map(([k,v])=>`${k}: ${v||'—'}`).join(' | ')}</p>`:''}
-    <table><thead><tr><th>Блюдо</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead><tbody>
-    ${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td>${i.quantity||1}</td><td>${(i.price||0).toLocaleString()} ₸</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</td></tr>`).join('')}
-    </tbody></table>
-    <div class="total">💰 Итого: ${(o.total||0).toLocaleString()} ₸</div>
-    <div class="footer"><div>Подпись официанта: ___________</div><div>Подпись гостя: ___________</div></div>
+    <div class="receipt">
+      <div class="header">
+        <h1>🍽️ SANDYQ</h1>
+        <div class="ornament">◆ ◇ ◆ ◇ ◆</div>
+        <div class="address">Алматы, ул. Абылайхана, 55</div>
+      </div>
+      <div class="info">
+        <div class="guest">👤 ${o.guest?.name||'—'}<br>📞 ${o.guest?.phone||'—'}</div>
+        <div class="datetime">📅 Дата: <b>${o.date||'—'}</b><br>🕐 Заказ: <b>#${o.id}</b></div>
+      </div>
+      ${o.special?`<p style="padding:10px;background:#fff3cd;border-radius:6px;margin-bottom:15px"><strong>💬 Пожелания:</strong> ${o.special}</p>`:''}
+      ${o.times&&Object.keys(o.times).length?`<p style="margin-bottom:10px;font-size:14px;color:#8B7355">⏰ Время подачи: ${Object.entries(o.times).map(([k,v])=>`${k}: ${v||'—'}`).join(' | ')}</p>`:''}
+      <table>
+        <thead><tr><th>Блюдо</th><th style="text-align:center">×</th><th style="text-align:right">Цена</th><th style="text-align:right">Сумма</th></tr></thead>
+        <tbody>
+          ${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td style="text-align:center">${i.quantity||1}</td><td class="amount">${(i.price||0).toLocaleString()} ₸</td><td class="amount">${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</td></tr>`).join('')}
+          <tr class="total-row"><td colspan="3" style="text-align:right">💰 ИТОГО:</td><td class="amount">${(o.total||0).toLocaleString()} ₸</td></tr>
+        </tbody>
+      </table>
+      <div class="footer">
+        <div class="signature"><div class="line"></div><div class="label">Подпись официанта</div></div>
+        <div class="signature"><div class="line"></div><div class="label">Подпись гостя</div></div>
+      </div>
+    </div>
+    <script>window.onload=function(){window.print();}<\/script>
   </body></html>`);
   w.document.close();
-  setTimeout(() => w.print(), 500);
 }
 
+// ===== PDF ОДНОГО ЗАКАЗА =====
+function downloadOrderPDF(idx){printOrder(idx);}
+
+// ===== PDF ВСЕХ ЗАКАЗОВ =====
 function downloadAllPDF(){
-  if(!allOrders.length) return alert('Нет заказов');
-  const w = window.open('','','width=900,height=700');
-  const rev = allOrders.reduce((s,o)=>s+(o.total||0),0);
-  const items = allOrders.reduce((s,o)=>s+(o.items||[]).reduce((ss,i)=>ss+(i.quantity||1),0),0);
+  if(!allOrders.length)return alert('Нет заказов');
+  const w=window.open('','','width=900,height=700');
+  const rev=allOrders.reduce((s,o)=>s+(o.total||0),0);
+  const items=allOrders.reduce((s,o)=>s+(o.items||[]).reduce((ss,i)=>ss+(i.quantity||1),0),0);
   w.document.write(`<html><head><title>Все заказы - Sandyq</title><style>
-    body{font-family:Arial;padding:30px;color:#333}
-    h1{color:#f7971e;border-bottom:2px solid #f7971e;padding-bottom:10px}
-    .stats{margin:20px 0;display:flex;gap:30px}
-    .stat{text-align:center}.stat b{font-size:24px;color:#f7971e}
-    .order{border:1px solid #ddd;border-left:3px solid #f7971e;padding:15px;margin:10px 0;border-radius:8px}
+    body{font-family:'Georgia',serif;padding:30px;color:#2a1508;background:#fffdf7}
+    h1{text-align:center;color:#8B6914;border-bottom:2px solid #c49a2a;padding-bottom:15px;margin-bottom:30px}
+    .stats{display:flex;justify-content:center;gap:40px;margin:20px 0}
+    .stat{text-align:center}.stat b{font-size:28px;color:#c49a2a}
+    .order{border:1px solid #e8d5b5;border-left:4px solid #c49a2a;padding:20px;margin:15px 0;border-radius:8px;background:#fffdf7}
+    .order h3{color:#8B6914;margin-bottom:10px}
     table{width:100%;border-collapse:collapse;margin:10px 0}
-    th{background:#f5f0eb;padding:8px;text-align:left}
-    td{padding:8px;border-bottom:1px solid #eee}
-    .total{text-align:right;font-weight:bold;color:#f7971e}
+    th{background:#c49a2a;color:white;padding:10px;text-align:left}
+    td{padding:10px;border-bottom:1px solid #e8d5b5}
+    .total{text-align:right;font-weight:bold;color:#8B6914;font-size:18px;margin-top:10px}
     @media print{body{padding:15px}}
   </style></head><body>
-    <h1>🍽️ Sandyq Алматы — Все заказы</h1>
+    <h1>🍽️ SANDYQ — Все заказы</h1>
     <div class="stats"><div class="stat"><b>${allOrders.length}</b><br>Заказов</div><div class="stat"><b>${rev.toLocaleString()} ₸</b><br>Выручка</div><div class="stat"><b>${items}</b><br>Позиций</div></div>
-    ${[...allOrders].reverse().map(o=>`<div class="order"><p><b>#${o.id}</b> | 👤 ${o.guest?.name||'—'} | 📞 ${o.guest?.phone||'—'} | 📅 ${o.date||'—'}</p><table><tr><th>Блюдо</th><th>×</th><th>Цена</th><th>Сумма</th></tr>${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td>${i.quantity||1}</td><td>${(i.price||0).toLocaleString()}₸</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><div class="total">💰 ${(o.total||0).toLocaleString()}₸</div></div>`).join('')}
+    ${[...allOrders].reverse().map(o=>`<div class="order"><h3>Заказ #${o.id} | 👤 ${o.guest?.name||'—'} | 📅 ${o.date||'—'}</h3><table><tr><th>Блюдо</th><th>×</th><th>Цена</th><th>Сумма</th></tr>${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td>${i.quantity||1}</td><td>${(i.price||0).toLocaleString()}₸</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><div class="total">💰 Итого: ${(o.total||0).toLocaleString()} ₸</div></div>`).join('')}
   </body></html>`);
   w.document.close();
-  setTimeout(() => w.print(), 500);
+  setTimeout(()=>w.print(),500);
 }
 
-// ===== ПЕЧАТЬ =====
-function printOrder(idx){
-  const o = allOrders[idx]; if(!o) return;
-  const w = window.open('','','width=800,height=600');
-  w.document.write(`<html><body style="font-family:Arial;padding:40px"><h1>🍽️ Sandyq Алматы</h1><p>#${o.id} | 📅 ${o.date}</p><p>👤 ${o.guest?.name} | 📞 ${o.guest?.phone}</p><table style="width:100%;border-collapse:collapse">${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||''}</td><td>×${i.quantity}</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><p style="font-size:1.2rem;font-weight:700;color:#f7971e;text-align:right">💰 ${(o.total||0).toLocaleString()}₸</p></body></html>`);
-  w.document.close();w.print();
-}
-
-// ===== УДАЛЕНИЕ =====
 async function deleteOrder(idx){
-  if(!confirm('Удалить этот заказ?')) return;
-  allOrders.splice(idx, 1);
-  try { await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:allOrders})}); } catch(e){}
+  if(!confirm('Удалить заказ?'))return;
+  allOrders.splice(idx,1);
+  try{await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:allOrders})});}catch(e){}
   loadOrders(document.getElementById('filter-date')?.value||'');
 }
 
 async function clearAllOrders(){
-  if(!confirm('Удалить ВСЕ заказы?')) return;
-  allOrders = [];
-  try { await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:[]})}); } catch(e){}
+  if(!confirm('Удалить ВСЕ заказы?'))return;
+  allOrders=[];
+  try{await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:[]})});}catch(e){}
   loadOrders();
 }
 </script>
