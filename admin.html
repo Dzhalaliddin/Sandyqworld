@@ -7,37 +7,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Segoe UI',sans-serif;
-      background:linear-gradient(135deg,#0a0a0f,#1a1a2e,#16213e,#0f0f1a);
-      color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;
-    }
-    .login-box{
-      background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);
-      border:1px solid rgba(255,255,255,0.1);border-radius:20px;
-      padding:40px;width:380px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.5);
-    }
+    body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0a0a0f,#1a1a2e,#16213e,#0f0f1a);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .login-box{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;width:380px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.5)}
     .login-box h1{font-size:2rem;margin-bottom:10px;color:#f7971e}
-    .login-box input{
-      width:100%;padding:14px;margin:10px 0;
-      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-      border-radius:12px;color:white;font-size:1rem;outline:none;
-    }
+    .login-box input{width:100%;padding:14px;margin:10px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;font-size:1rem;outline:none}
     .login-box input:focus{border-color:#f7971e}
-    .login-box button{
-      width:100%;padding:14px;margin-top:15px;
-      background:linear-gradient(135deg,#f7971e,#e67e22);
-      border:none;border-radius:12px;color:white;font-size:1.1rem;
-      font-weight:700;cursor:pointer;transition:all 0.3s;
-    }
+    .login-box button{width:100%;padding:14px;margin-top:15px;background:linear-gradient(135deg,#f7971e,#e67e22);border:none;border-radius:12px;color:white;font-size:1.1rem;font-weight:700;cursor:pointer}
     .login-box button:hover{box-shadow:0 8px 25px rgba(247,151,30,0.5)}
     .error{color:#e74c3c;margin-top:10px;display:none}
     .admin-panel{display:none;width:100%;max-width:1400px;padding:30px}
     .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:15px}
-    .admin-nav{display:flex;gap:10px;flex-wrap:wrap}
+    .admin-nav{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .admin-nav a,.admin-nav button{padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;color:white;text-decoration:none;cursor:pointer;font-size:0.9rem}
     .admin-nav a:hover,.admin-nav button:hover{background:rgba(255,255,255,0.1)}
+    .admin-nav a.active{background:#f7971e;color:white;border-color:#f7971e}
     .logout-btn{background:#e74c3c!important;border:none!important}
+    .back-link{color:#f7971e;text-decoration:none;font-size:0.9rem;display:inline-flex;align-items:center;gap:5px;padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px}
+    .back-link:hover{background:rgba(255,255,255,0.1)}
     .total-orders{background:rgba(255,255,255,0.05);padding:12px 24px;border-radius:18px}
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px;margin-bottom:30px}
     .stat-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px;text-align:center}
@@ -49,13 +35,16 @@
     .date-filter{display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
     .date-filter input{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:10px 16px;border-radius:12px;color:white;color-scheme:dark}
     .order-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.06);border-left:3px solid #f7971e;border-radius:16px;padding:20px;margin-bottom:16px}
+    .booking-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.06);border-left:3px solid #3498db;border-radius:16px;padding:20px;margin-bottom:16px}
     .order-total{font-size:1.2rem;font-weight:700;color:#f7971e;text-align:right;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
     .btn{padding:7px 14px;border:none;border-radius:12px;cursor:pointer;font-size:0.85rem;color:white}
     .btn-print{background:#9b59b6}
     .btn-pdf{background:#e67e22}
     .btn-delete{background:#e74c3c}
     .btn-refresh{background:#2ecc71}
+    .btn-preorder{background:#3498db}
     .empty-orders{text-align:center;color:rgba(255,255,255,0.3);padding:50px}
+    .section-title{font-size:1.4rem;font-weight:700;margin:25px 0 15px;color:#f7971e;display:flex;align-items:center;gap:8px}
     @media(max-width:768px){.login-box{width:90%}.stats-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
@@ -71,102 +60,184 @@
 
 <div class="admin-panel" id="admin-panel">
   <div class="admin-header">
-    <div><h1>📊 Sandyq Admin</h1><p style="opacity:0.6">📍 Алматы, Абылайхана 55 | ☁️ Облачное хранение</p></div>
+    <div><h1>📊 Sandyq Admin</h1><p style="opacity:0.6">📍 Алматы, Абылайхана 55</p></div>
     <div class="admin-nav">
+      <a href="index.html" class="back-link">← На сайт</a>
       <button class="btn-refresh" onclick="loadOrders()">🔄 Обновить</button>
-      <a href="#" onclick="downloadAllPDF();return false">📄 Все заказы PDF</a>
+      <a href="#" onclick="switchTab('orders');return false" class="active" id="tab-orders">📋 Заказы</a>
+      <a href="#" onclick="switchTab('bookings');return false" id="tab-bookings">📅 Брони</a>
+      <a href="#" onclick="downloadAllPDF();return false">📄 PDF</a>
       <a href="#" onclick="clearAllOrders();return false" style="color:#e74c3c">🗑️ Очистить</a>
       <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
     </div>
-    <div class="total-orders">📦 Заказов: <span id="orders-count">0</span></div>
+    <div class="total-orders" id="total-badge">📦 Заказов: <span id="orders-count">0</span></div>
   </div>
 
   <div class="date-filter">
     <label>📅 Фильтр по дате:</label>
-    <input type="date" id="filter-date" onchange="loadOrders(this.value)">
-    <button class="btn btn-print" onclick="document.getElementById('filter-date').value='';loadOrders()">Сбросить</button>
+    <input type="date" id="filter-date" onchange="loadCurrentTab(this.value)">
+    <button class="btn btn-print" onclick="document.getElementById('filter-date').value='';loadCurrentTab()">Сбросить</button>
   </div>
 
   <div class="stats-grid" id="stats-container"></div>
   <div class="dishes-stats" id="dishes-stats"></div>
-  <div id="orders-list"></div>
+  <div id="tab-content"></div>
 </div>
 
 <script>
 const ADMIN_PASSWORD = 'Sandyq2024';
-const JSONBIN_KEY = '$2a$10$AxIfA8p7dq6td0BYtWWuhecnyqCJbsTGoo.oWIds3H01C43GvLGuu';
-const JSONBIN_BIN_ID = '6a411873f5f4af5e293d0edd';
-const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
 let allOrders = [];
+let allBookings = [];
+let currentTab = 'orders';
 
 function checkPassword(){
   if(document.getElementById('password').value === ADMIN_PASSWORD){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-panel').style.display='block';
-    document.body.style.display='block';
-    document.body.style.alignItems='flex-start';
+    document.body.style.display='block';document.body.style.alignItems='flex-start';
     localStorage.setItem('admin_logged_in','true');
-    loadOrders();
+    loadAllData();
   }else{document.getElementById('error').style.display='block';}
 }
 function logout(){localStorage.removeItem('admin_logged_in');location.reload();}
 if(localStorage.getItem('admin_logged_in')==='true'){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('admin-panel').style.display='block';
-  document.body.style.display='block';
-  document.body.style.alignItems='flex-start';
-  loadOrders();
+  document.body.style.display='block';document.body.style.alignItems='flex-start';
+  loadAllData();
 }
 
-async function loadOrders(filterDate=''){
-  try{const r=await fetch(JSONBIN_URL+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}});const d=await r.json();allOrders=d.record.orders||[];}catch(e){allOrders=[];}
-  let orders=allOrders;
-  if(filterDate)orders=orders.filter(o=>o.date===filterDate);
-  document.getElementById('orders-count').textContent=orders.length;
-  const rev=orders.reduce((s,o)=>s+(o.total||0),0);
-  const items=orders.reduce((s,o)=>s+(o.items||[]).reduce((ss,i)=>ss+(i.quantity||1),0),0);
-  document.getElementById('stats-container').innerHTML=`<div class="stat-card"><div class="stat-value">${orders.length}</div><div class="stat-label">Заказов</div></div><div class="stat-card"><div class="stat-value">${rev.toLocaleString()} ₸</div><div class="stat-label">Выручка</div></div><div class="stat-card"><div class="stat-value">${items}</div><div class="stat-label">Позиций</div></div>`;
-  const map={};orders.forEach(o=>(o.items||[]).forEach(i=>{const k=i.name?.ru||i.name||'Блюдо';if(!map[k])map[k]={name:k,qty:0};map[k].qty+=(i.quantity||1);}));
-  document.getElementById('dishes-stats').innerHTML='<h4 style="margin-bottom:15px">📊 Популярность блюд</h4>'+Object.values(map).sort((a,b)=>b.qty-a.qty).map(d=>`<div class="dish-stat-row"><span>${d.name}</span><span class="dish-stat-qty">×${d.qty}</span></div>`).join('');
-  const list=document.getElementById('orders-list');
-  if(!orders.length){list.innerHTML='<div class="empty-orders"><p>Нет заказов</p></div>';return;}
-  list.innerHTML=[...orders].reverse().map((o,idx)=>{const ri=orders.length-1-idx;return`<div class="order-card"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px"><div><b>#${o.id}</b> 👤 ${o.guest?.name||'—'} 📞 ${o.guest?.phone||'—'}</div><div>📅 ${o.date||'—'}</div></div>${(o.items||[]).map(i=>`<div style="display:flex;justify-content:space-between;padding:3px 0"><span>${i.name?.ru||'Блюдо'} ×${i.quantity||1}</span><span>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</span></div>`).join('')}${o.times&&Object.keys(o.times).length?`<div style="margin-top:8px;font-size:0.85rem;opacity:0.7">⏰ ${Object.entries(o.times).map(([k,v])=>`${k}:${v||'—'}`).join(' | ')}</div>`:''}${o.special?`<p style="font-size:0.85rem;opacity:0.7;margin-top:5px">💬 ${o.special}</p>`:''}<div class="order-total">💰 ${(o.total||0).toLocaleString()} ₸</div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-print" onclick="printOrder(${ri})">🖨️ Печать</button><button class="btn btn-pdf" onclick="downloadOrderPDF(${ri})">📄 PDF</button><button class="btn btn-delete" onclick="deleteOrder(${ri})">🗑️ Удалить</button></div></div>`}).join('');}
+function loadAllData(){
+  allOrders = JSON.parse(localStorage.getItem('orders')||'[]');
+  allBookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+  loadCurrentTab();
+}
 
-// ===== ПЕЧАТЬ С КРАСИВЫМ ЧЕКОМ =====
+function loadCurrentTab(filterDate=''){
+  if(currentTab === 'orders') loadOrders(filterDate);
+  else loadBookings(filterDate);
+}
+
+function switchTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('tab-'+tab)?.classList.add('active');
+  document.getElementById('total-badge').innerHTML = tab==='orders' ? '📦 Заказов: <span id="orders-count">0</span>' : '📅 Броней: <span id="bookings-count">0</span>';
+  loadCurrentTab();
+}
+
+function loadOrders(filterDate=''){
+  let orders = allOrders;
+  if(filterDate) orders = orders.filter(o => o.date === filterDate);
+  document.getElementById('orders-count').textContent = orders.length;
+  showStats(orders);
+  showDishesStats(orders);
+  const list = document.getElementById('tab-content');
+  if(!orders.length){list.innerHTML='<div class="empty-orders"><p>Нет заказов</p></div>';return;}
+  list.innerHTML = '<div class="section-title">📋 Заказы</div>' + [...orders].reverse().map((o,idx) => {
+    const ri = orders.length-1-idx;
+    return `<div class="order-card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div><b>#${String(o.id).slice(-6)}</b> 👤 ${o.guest?.name||'—'} 📞 ${o.guest?.phone||'—'}</div>
+        <div>📅 ${o.date||'—'} | 🕐 ${new Date(o.timestamp).toLocaleString('ru-RU')}</div>
+      </div>
+      ${(o.items||[]).map(i=>`<div style="display:flex;justify-content:space-between;padding:3px 0"><span>${i.name?.ru||'Блюдо'} ×${i.quantity||1}</span><span>${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</span></div>`).join('')}
+      ${o.times&&Object.keys(o.times).length?`<div style="margin-top:8px;font-size:0.85rem;opacity:0.7">⏰ ${Object.entries(o.times).map(([k,v])=>`${k}: ${v||'—'}`).join(' | ')}</div>`:''}
+      ${o.special?`<p style="font-size:0.85rem;opacity:0.7;margin-top:5px">💬 ${o.special}</p>`:''}
+      <div style="display:flex;justify-content:flex-end;gap:20px;margin-top:8px;font-size:0.9rem">
+        <span>Сумма: ${(o.subtotal||0).toLocaleString()} ₸</span><span>Сервис 15%: ${(o.service||0).toLocaleString()} ₸</span>
+      </div>
+      <div class="order-total">💰 Итого: ${(o.total||0).toLocaleString()} ₸</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-print" onclick="printOrder(${ri})">🖨️</button>
+        <button class="btn btn-pdf" onclick="downloadOrderPDF(${ri})">📄</button>
+        <button class="btn btn-delete" onclick="deleteOrder(${ri})">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function loadBookings(filterDate=''){
+  let bookings = allBookings;
+  if(filterDate) bookings = bookings.filter(b => b.date === filterDate);
+  document.getElementById('bookings-count').textContent = bookings.length;
+  const list = document.getElementById('tab-content');
+  if(!bookings.length){list.innerHTML='<div class="empty-orders"><p>Нет броней</p></div>';return;}
+  list.innerHTML = '<div class="section-title">📅 Бронирования столов</div>' + [...bookings].reverse().map((b,idx) => {
+    const ri = bookings.length-1-idx;
+    return `<div class="booking-card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div><b>🪑 Стол №${b.table}</b> 🏛️ ${b.hall==='hall1'?'Зал 1 этаж':b.hall==='summer'?'Летник':'Зал 2 этаж'}</div>
+        <div>📅 ${b.date||'—'} ⏰ ${b.time||'—'}</div>
+      </div>
+      <p>👤 <b>Гость:</b> ${b.name||'—'} | 📞 ${b.phone||'—'} | 👥 ${b.guests||'—'} персон</p>
+      ${b.comment?`<p>💬 ${b.comment}</p>`:''}
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-preorder" onclick="checkPreorder('${b.phone}','${b.date}')">📋 Проверить предзаказ</button>
+        <button class="btn btn-delete" onclick="deleteBooking(${ri})">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function checkPreorder(phone, date){
+  const order = allOrders.find(o => o.guest?.phone === phone && o.date === date);
+  if(order){
+    const msg = `✅ Найден предзаказ!\n📅 ${order.date}\n👤 ${order.guest?.name}\n💰 ${(order.total||0).toLocaleString()} ₸\n📋 Позиций: ${(order.items||[]).length}`;
+    alert(msg);
+  } else {
+    alert('❌ Предзаказ не найден для этого номера на эту дату');
+  }
+}
+
+function showStats(data){
+  const rev = data.reduce((s,o) => s + (o.total||0), 0);
+  const items = data.reduce((s,o) => s + (o.items||[]).reduce((ss,i) => ss + (i.quantity||1), 0), 0);
+  document.getElementById('stats-container').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${data.length}</div><div class="stat-label">${currentTab==='orders'?'Заказов':'Броней'}</div></div>
+    <div class="stat-card"><div class="stat-value">${rev.toLocaleString()} ₸</div><div class="stat-label">Выручка</div></div>
+    <div class="stat-card"><div class="stat-value">${items}</div><div class="stat-label">Позиций</div></div>`;
+}
+
+function showDishesStats(orders){
+  const map = {};
+  orders.forEach(o => (o.items||[]).forEach(i => {
+    const k = i.name?.ru || i.name || 'Блюдо';
+    if(!map[k]) map[k] = { name: k, qty: 0 };
+    map[k].qty += (i.quantity||1);
+  }));
+  document.getElementById('dishes-stats').innerHTML = '<h4 style="margin-bottom:15px">📊 Популярность блюд</h4>' + 
+    Object.values(map).sort((a,b) => b.qty - a.qty).map(d => `<div class="dish-stat-row"><span>${d.name}</span><span class="dish-stat-qty">×${d.qty}</span></div>`).join('');
+}
+
+// ===== ПЕЧАТЬ / PDF С ПОДПИСЯМИ =====
 function printOrder(idx){
-  const o=allOrders[idx];if(!o)return;
-  const w=window.open('','','width=850,height=700');
-  w.document.write(`<html><head><title>Заказ #${o.id} - Sandyq</title><style>
+  const o = allOrders[idx]; if(!o) return;
+  const sub = o.subtotal || (o.items||[]).reduce((s,i)=>s+(i.price||0)*(i.quantity||1),0);
+  const serv = o.service || Math.round(sub*0.15);
+  const w = window.open('','','width=850,height=700');
+  w.document.write(`<html><head><title>Заказ #${String(o.id).slice(-6)} - Sandyq</title><style>
     *{margin:0;padding:0;box-sizing:border-box}
-    @media print {
-      body{background:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      .receipt{border:2px solid #c49a2a!important;box-shadow:none!important}
-      .header h1{color:#8B6914!important}
-      th{background:#c49a2a!important;color:white!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      .total-row td{background:#fdf5e6!important;color:#8B6914!important}
-    }
     body{font-family:'Georgia','Times New Roman',serif;padding:40px;color:#2a1508;background:#fdfaf4}
-    .receipt{max-width:700px;margin:0 auto;border:3px solid #c49a2a;border-radius:12px;padding:40px;background:#fffdf7;box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+    .receipt{max-width:700px;margin:0 auto;border:3px solid #c49a2a;border-radius:12px;padding:40px;background:#fffdf7;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
     .header{text-align:center;border-bottom:3px double #c49a2a;padding-bottom:20px;margin-bottom:25px}
-    .header h1{font-size:36px;color:#8B6914;letter-spacing:3px;margin-bottom:5px}
-    .header .ornament{font-size:22px;color:#c49a2a;letter-spacing:10px;margin:8px 0}
-    .header .address{font-size:15px;color:#8B7355}
-    .info{display:flex;justify-content:space-between;margin-bottom:25px;font-size:16px;padding:15px;background:#fdf5e6;border-radius:8px;border:1px solid #e8d5b5}
-    .info .guest{font-weight:bold;font-size:17px}
+    .header h1{font-size:32px;color:#8B6914;letter-spacing:2px;margin-bottom:5px}
+    .header .ornament{font-size:20px;color:#c49a2a;letter-spacing:8px;margin:5px 0}
+    .header .address{font-size:14px;color:#8B7355}
+    .info{display:flex;justify-content:space-between;margin-bottom:25px;font-size:15px;padding:15px;background:#fdf5e6;border-radius:8px;border:1px solid #e8d5b5}
+    .info .guest{font-weight:bold;font-size:16px}
     .info .datetime{text-align:right;color:#8B7355}
     table{width:100%;border-collapse:collapse;margin:20px 0;border:1px solid #e8d5b5}
-    th{background:#c49a2a;color:white;padding:14px 16px;text-align:left;font-size:15px;text-transform:uppercase;letter-spacing:1px;border:1px solid #b8860b}
-    th:first-child{border-radius:0}
-    th:last-child{border-radius:0}
-    td{padding:12px 16px;border:1px solid #e8d5b5;font-size:15px}
+    th{background:#c49a2a;color:white;padding:12px 15px;text-align:left;font-size:14px;text-transform:uppercase;letter-spacing:1px;border:1px solid #b8860b}
+    td{padding:12px 15px;border:1px solid #e8d5b5;font-size:15px}
     .amount{text-align:right}
-    .total-row td{background:#fdf5e6;font-weight:bold;border:1px solid #e8d5b5;font-size:20px;color:#8B6914;padding:16px}
-    .total-row td:first-child{border-right:none}
+    .total-row td{background:#fdf5e6;font-weight:bold;border:1px solid #e8d5b5;font-size:18px;color:#8B6914;padding:15px}
     .footer{margin-top:35px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px}
     .footer .signature{text-align:center;width:40%}
     .footer .line{border-top:1px solid #8B7355;margin-top:50px;margin-bottom:5px}
     .footer .label{font-size:13px;color:#8B7355;text-transform:uppercase;letter-spacing:2px}
     .stamp{width:90px;height:90px;border:3px solid #c49a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c49a2a;font-size:12px;text-align:center;transform:rotate(-15deg);opacity:0.5;position:absolute;right:50px;bottom:50px}
+    @media print{body{padding:0;background:white}.receipt{border:none;box-shadow:none;padding:30px}}
   </style></head><body>
     <div class="receipt" style="position:relative">
       <div class="header">
@@ -176,7 +247,7 @@ function printOrder(idx){
       </div>
       <div class="info">
         <div class="guest"><div style="font-size:12px;color:#8B7355;margin-bottom:4px">ГОСТЬ:</div>${o.guest?.name||'—'}<br><div style="font-size:12px;color:#8B7355;margin-top:6px">📞 ${o.guest?.phone||'—'}</div></div>
-        <div class="datetime"><div style="font-size:12px;color:#8B7355;margin-bottom:4px">ДАТА:</div><b>${o.date||'—'}</b><br><div style="font-size:12px;color:#8B7355;margin-top:6px">ЗАКАЗ:</div><b>#${o.id}</b></div>
+        <div class="datetime"><div style="font-size:12px;color:#8B7355;margin-bottom:4px">ДАТА:</div><b>${o.date||'—'}</b><br><div style="font-size:12px;color:#8B7355;margin-top:6px">ЗАКАЗ:</div><b>#${String(o.id).slice(-6)}</b></div>
       </div>
       ${o.special?`<p style="padding:12px;background:#fff3cd;border:1px solid #e8d5b5;border-radius:6px;margin-bottom:15px;font-size:15px"><strong>💬 Пожелания:</strong> ${o.special}</p>`:''}
       ${o.times&&Object.keys(o.times).length?`<p style="margin-bottom:12px;font-size:15px;color:#8B7355;padding:8px 12px;background:#fdf5e6;border-radius:6px">⏰ <strong>Время подачи:</strong> ${Object.entries(o.times).map(([k,v])=>`${k}: ${v||'—'}`).join(' | ')}</p>`:''}
@@ -184,6 +255,8 @@ function printOrder(idx){
         <thead><tr><th>Блюдо</th><th style="text-align:center;width:60px">Кол-во</th><th style="text-align:right;width:100px">Цена</th><th style="text-align:right;width:120px">Сумма</th></tr></thead>
         <tbody>
           ${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td style="text-align:center">${i.quantity||1}</td><td class="amount">${(i.price||0).toLocaleString()} ₸</td><td class="amount">${((i.price||0)*(i.quantity||1)).toLocaleString()} ₸</td></tr>`).join('')}
+          <tr><td colspan="3" style="text-align:right">Сумма:</td><td class="amount">${sub.toLocaleString()} ₸</td></tr>
+          <tr><td colspan="3" style="text-align:right">Сервис 15%:</td><td class="amount">${serv.toLocaleString()} ₸</td></tr>
           <tr class="total-row"><td colspan="3" style="text-align:right;font-weight:bold">💰 ИТОГО К ОПЛАТЕ:</td><td class="amount" style="font-weight:bold">${(o.total||0).toLocaleString()} ₸</td></tr>
         </tbody>
       </table>
@@ -198,49 +271,23 @@ function printOrder(idx){
   w.document.close();
 }
 
-// ===== PDF ОДНОГО ЗАКАЗА =====
-function downloadOrderPDF(idx){printOrder(idx);}
+function downloadOrderPDF(idx){ printOrder(idx); }
 
-// ===== PDF ВСЕХ ЗАКАЗОВ =====
 function downloadAllPDF(){
-  if(!allOrders.length)return alert('Нет заказов');
+  if(!allOrders.length) return alert('Нет заказов');
   const w=window.open('','','width=900,height=700');
   const rev=allOrders.reduce((s,o)=>s+(o.total||0),0);
-  const items=allOrders.reduce((s,o)=>s+(o.items||[]).reduce((ss,i)=>ss+(i.quantity||1),0),0);
-  w.document.write(`<html><head><title>Все заказы - Sandyq</title><style>
-    body{font-family:'Georgia',serif;padding:30px;color:#2a1508;background:#fffdf7}
-    h1{text-align:center;color:#8B6914;border-bottom:2px solid #c49a2a;padding-bottom:15px;margin-bottom:30px}
-    .stats{display:flex;justify-content:center;gap:40px;margin:20px 0}
-    .stat{text-align:center}.stat b{font-size:28px;color:#c49a2a}
-    .order{border:1px solid #e8d5b5;border-left:4px solid #c49a2a;padding:20px;margin:15px 0;border-radius:8px;background:#fffdf7}
-    .order h3{color:#8B6914;margin-bottom:10px}
-    table{width:100%;border-collapse:collapse;margin:10px 0}
-    th{background:#c49a2a;color:white;padding:10px;text-align:left}
-    td{padding:10px;border-bottom:1px solid #e8d5b5}
-    .total{text-align:right;font-weight:bold;color:#8B6914;font-size:18px;margin-top:10px}
-    @media print{body{padding:15px}}
-  </style></head><body>
+  w.document.write(`<html><head><title>Все заказы Sandyq</title><style>body{font-family:Georgia,serif;padding:30px;color:#2a1508} h1{color:#8B6914;border-bottom:2px solid #c49a2a} .order{border:1px solid #e8d5b5;padding:15px;margin:10px 0} table{width:100%;border-collapse:collapse} th{background:#c49a2a;color:white;padding:8px} td{padding:8px;border-bottom:1px solid #e8d5b5} .total{text-align:right;font-weight:bold;color:#8B6914}</style></head><body>
     <h1>🍽️ SANDYQ — Все заказы</h1>
-    <div class="stats"><div class="stat"><b>${allOrders.length}</b><br>Заказов</div><div class="stat"><b>${rev.toLocaleString()} ₸</b><br>Выручка</div><div class="stat"><b>${items}</b><br>Позиций</div></div>
-    ${[...allOrders].reverse().map(o=>`<div class="order"><h3>Заказ #${o.id} | 👤 ${o.guest?.name||'—'} | 📅 ${o.date||'—'}</h3><table><tr><th>Блюдо</th><th>×</th><th>Цена</th><th>Сумма</th></tr>${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td>${i.quantity||1}</td><td>${(i.price||0).toLocaleString()}₸</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><div class="total">💰 Итого: ${(o.total||0).toLocaleString()} ₸</div></div>`).join('')}
+    <p>Всего: ${allOrders.length} заказов | Выручка: ${rev.toLocaleString()} ₸</p>
+    ${[...allOrders].reverse().map(o=>`<div class="order"><p><b>#${String(o.id).slice(-6)}</b> | 👤 ${o.guest?.name||'—'} | 📅 ${o.date||'—'}</p><table><tr><th>Блюдо</th><th>×</th><th>Сумма</th></tr>${(o.items||[]).map(i=>`<tr><td>${i.name?.ru||'Блюдо'}</td><td>${i.quantity||1}</td><td>${((i.price||0)*(i.quantity||1)).toLocaleString()}₸</td></tr>`).join('')}</table><p class="total">💰 ${(o.total||0).toLocaleString()}₸</p></div>`).join('')}
   </body></html>`);
-  w.document.close();
-  setTimeout(()=>w.print(),500);
+  w.document.close();setTimeout(()=>w.print(),500);
 }
 
-async function deleteOrder(idx){
-  if(!confirm('Удалить заказ?'))return;
-  allOrders.splice(idx,1);
-  try{await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:allOrders})});}catch(e){}
-  loadOrders(document.getElementById('filter-date')?.value||'');
-}
-
-async function clearAllOrders(){
-  if(!confirm('Удалить ВСЕ заказы?'))return;
-  allOrders=[];
-  try{await fetch(JSONBIN_URL,{method:'PUT',headers:{'X-Master-Key':JSONBIN_KEY,'Content-Type':'application/json'},body:JSON.stringify({orders:[]})});}catch(e){}
-  loadOrders();
-}
+function deleteOrder(idx){if(!confirm('Удалить заказ?'))return;allOrders.splice(idx,1);localStorage.setItem('orders',JSON.stringify(allOrders));loadOrders();}
+function deleteBooking(idx){if(!confirm('Удалить бронь?'))return;allBookings.splice(idx,1);localStorage.setItem('bookings',JSON.stringify(allBookings));loadBookings();}
+function clearAllOrders(){if(!confirm('Удалить ВСЕ заказы и брони?'))return;allOrders=[];allBookings=[];localStorage.setItem('orders','[]');localStorage.setItem('bookings','[]');loadAllData();}
 </script>
 </body>
 </html>
