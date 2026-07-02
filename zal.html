@@ -215,6 +215,23 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== TELEGRAM =====
+const TELEGRAM_BOT_TOKEN = '1745757539:AAEUlkcpb8z7X7s8deuAJPD1saXM92YmOXA';
+const TELEGRAM_CHAT_ID = '-1004480995803';
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+
+function generateTimeOptions() {
+    let opts = '';
+    for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 15) {
+            const hh = String(h).padStart(2,'0');
+            const mm = String(m).padStart(2,'0');
+            opts += `<option value="${hh}:${mm}">${hh}:${mm}</option>`;
+        }
+    }
+    return opts;
+}
+
 // ===== ГЕНЕРАТОР SVG СТОЛА =====
 function genTable(id, type, x, y, w, h, seats, color='#22c55e', room='', customText='') {
     const cx = x + w/2, cy = y + h/2;
@@ -300,20 +317,8 @@ const halls = {
     }
 };
 
-// ===== ГЕНЕРАТОР ВРЕМЕНИ =====
-function generateTimeOptions() {
-    let opts = '';
-    for (let h = 0; h < 24; h++) {
-        for (let m = 0; m < 60; m += 15) {
-            const hh = String(h).padStart(2,'0');
-            const mm = String(m).padStart(2,'0');
-            opts += `<option value="${hh}:${mm}">${hh}:${mm}</option>`;
-        }
-    }
-    return opts;
-}
-
 let currentHall = 'hall1';
+let selectedTable = null;
 
 function loadHall(hallId) {
     currentHall = hallId;
@@ -323,7 +328,8 @@ function loadHall(hallId) {
     document.querySelectorAll('.table-shape').forEach(el => {
         el.addEventListener('click', function(e) {
             e.stopPropagation();
-            openBookingModal(this.dataset.table);
+            selectedTable = this.dataset.table;
+            openBookingModal(selectedTable);
         });
     });
 }
@@ -337,7 +343,7 @@ function openBookingModal(tableId) {
         <div class="table-number">№${tableId}</div>
         <img src="Стол №${tableId}.jpg" alt="Фото стола №${tableId}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
         <div class="placeholder-text" style="display:none;">🖼️ Фото не найдено</div>
-        <p class="table-info">🏛️ ${halls[currentHall].name}</p>
+        <p class="table-info">🏛️ ${halls[currentHall].name} | 📍 Алматы, Абылайхана 55</p>
         <input type="text" id="bookSurname" placeholder="Фамилия">
         <input type="text" id="bookName" placeholder="Имя">
         <input type="tel" id="bookPhone" placeholder="Телефон">
@@ -359,7 +365,7 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
-function submitBooking() {
+async function submitBooking() {
     const surname = document.getElementById('bookSurname').value.trim();
     const name = document.getElementById('bookName').value.trim();
     const phone = document.getElementById('bookPhone').value.trim();
@@ -367,24 +373,64 @@ function submitBooking() {
     const date = document.getElementById('bookDate').value;
     const time = document.getElementById('bookTime').value;
     const comment = document.getElementById('bookComment').value.trim();
+    
     if (!surname || !name || !phone || !date) {
         showToast('❌ Заполните фамилию, имя, телефон и дату!');
         return;
     }
+    
     const fullName = `${surname} ${name}`;
-    const msg = `📅 <b>БРОНИРОВАНИЕ СТОЛА</b>\n🍽️ Sandyq Алматы\n🏛️ ${halls[currentHall].name}\n🪑 Стол №${selectedTable}\n\n👤 <b>Гость:</b> ${fullName}\n📞 <b>Телефон:</b> ${phone}\n👥 <b>Персон:</b> ${guests||'—'}\n📅 <b>Дата:</b> ${date}\n⏰ <b>Время:</b> ${time||'—'}${comment?`\n💬 <b>Комментарий:</b> ${comment}`:''}`;
-    fetch(`https://api.telegram.org/bot1745757539:AAEUlkcpb8z7X7s8deuAJPD1saXM92YmOXA/sendMessage`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: '-1004480995803', text: msg, parse_mode: 'HTML' })
-    }).catch(e => console.log(e));
+    const hallName = halls[currentHall].name;
+    
+    // Отправка в Telegram
+    const msg = `📅 <b>БРОНИРОВАНИЕ СТОЛА</b>\n🍽️ Sandyq Алматы, Абылайхана 55\n🏛️ ${hallName}\n🪑 Стол №${selectedTable}\n\n👤 ${fullName}\n📞 ${phone}\n👥 ${guests||'—'} персон\n📅 ${date}\n⏰ ${time||'—'}${comment?`\n💬 ${comment}`:''}`;
+    
+    try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: msg,
+                parse_mode: 'HTML',
+                reply_markup: JSON.stringify({
+                    inline_keyboard: [[{ text: '🔗 Открыть админку', url: 'https://dzhalaliddin.github.io/Sandyqworld/admin.html' }]]
+                })
+            })
+        });
+        console.log('Бронь отправлена в Telegram');
+    } catch(e) {
+        console.log('Ошибка отправки брони:', e);
+    }
+    
+    // Сохраняем локально
     const bookings = JSON.parse(localStorage.getItem('bookings')||'[]');
-    bookings.push({table:selectedTable,hall:currentHall,name:fullName,phone,guests,date,time,comment,timestamp:new Date().toISOString()});
+    bookings.push({
+        table: selectedTable,
+        hall: currentHall,
+        hallName: hallName,
+        name: fullName,
+        phone: phone,
+        guests: guests,
+        date: date,
+        time: time,
+        comment: comment,
+        city: 'Алматы',
+        timestamp: new Date().toISOString()
+    });
     localStorage.setItem('bookings', JSON.stringify(bookings));
+    console.log('Бронь сохранена локально');
+    
     closeModal();
     showToast('✅ Бронирование отправлено!');
 }
 
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
 
 document.querySelectorAll('.hall-tab').forEach(btn => btn.addEventListener('click', () => loadHall(btn.dataset.hall)));
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
