@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Бронирование столов — Сандык Алматы</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="container">
+    <div class="top-nav">
+        <a href="index.html" class="back-link">← Меню</a>
+    </div>
+    <h1>🍽️ Бронирование столов</h1>
+    <p class="subtitle">Выберите зал → нажмите на стол → забронируйте</p>
+
+    <div class="hall-tabs" id="hallTabs">
+        <button class="hall-tab active" data-hall="hall1">🏛️ Зал 1 этаж</button>
+        <button class="hall-tab" data-hall="summer">🌿 Летник</button>
+        <button class="hall-tab" data-hall="hall2">🏛️ Зал 2 этаж</button>
+    </div>
+
+    <div class="floor-plan" id="floorPlan"></div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card" id="modalCard"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="scripts.js"></script>
+<script>
+// ============================================================
+//  ЗАЛЫ — СПЕЦИФИЧНЫЙ JS
+// ============================================================
+function generateTimeOptions() {
+    let opts = '';
+    for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 15) {
+            opts += `<option value="${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}">${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}</option>`;
+        }
+    }
+    return opts;
+}
+
+function genTable(id, type, x, y, w, h, seats, color='#22c55e', room='', customText='') {
+    const cx = x + w/2, cy = y + h/2;
+    let shape = '';
+    switch(type) {
+        case 'round': shape = `<circle cx="${cx}" cy="${cy}" r="${w/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+        case 'rect_h': shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+        case 'rect_v': shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+        case 'oval': shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+        case 'oval_v': shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+    }
+    const text = customText || id;
+    const label = room ? `<text x="${x+w+8}" y="${y+14}" class="room-label">${room}</text>` : '';
+    return `<g class="table-shape" data-table="${id}">${shape}<text x="${cx}" y="${cy+5}" class="table-text">${text}</text>${label}</g>`;
+}
+
+const halls = {
+    hall1: {
+        name: 'Зал 1 этаж',
+        svg: `<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg"><rect width="1000" height="800" fill="#141827" rx="12"/>
+            <rect x="95" y="110" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="115" y="135" class="room-label" fill="#999">К</text>
+            <rect x="240" y="110" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="260" y="135" class="room-label" fill="#999">К</text>
+            <rect x="430" y="110" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="450" y="135" class="room-label" fill="#999">К</text>
+            <rect x="620" y="110" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="640" y="135" class="room-label" fill="#999">К</text>
+            <rect x="95" y="310" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="115" y="335" class="room-label" fill="#999">К</text>
+            <rect x="620" y="310" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="640" y="335" class="room-label" fill="#999">К</text>
+            <rect x="430" y="510" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="450" y="535" class="room-label" fill="#999">К</text>
+            <rect x="620" y="510" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="640" y="535" class="room-label" fill="#999">К</text>
+            <rect x="240" y="640" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="260" y="665" class="room-label" fill="#999">К</text>
+            <rect x="430" y="640" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="450" y="665" class="room-label" fill="#999">К</text>
+            <rect x="620" y="640" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="640" y="665" class="room-label" fill="#999">К</text>
+            <rect x="790" y="50" width="60" height="60" rx="6" fill="#3a3d4e"/><text x="820" y="90" class="room-label" fill="#999">WC</text>
+            <rect x="890" y="450" width="60" height="400" rx="6" fill="#3a3d4e"/><text x="920" y="650" class="room-label" fill="#999" writing-mode="vertical-rl">ДЕТСК</text>
+            <rect x="90" y="670" width="80" height="40" rx="8" fill="#2a2d3e" stroke="#888" stroke-width="2"/><text x="130" y="698" class="room-label" fill="#aaa">ВХОД</text>
+            <ellipse cx="430" cy="290" rx="65" ry="40" fill="#2a2d3e" stroke="#555" stroke-width="1.5" stroke-dasharray="4,4"/><text x="430" y="296" class="room-label" fill="#999">СЦЕНА</text>
+            ${genTable(1,'rect_h',290,690,90,35,8)} ${genTable(2,'rect_h',490,690,90,35,8)} ${genTable(3,'rect_h',690,690,90,35,8)}
+            ${genTable(4,'round',300,590,50,50,2)} ${genTable(5,'rect_v',370,580,35,50,2)} ${genTable(6,'oval',540,590,90,40,6)}
+            ${genTable(7,'rect_v',685,525,40,55,6)} ${genTable(8,'rect_v',820,510,35,40,2)} ${genTable(9,'rect_h',30,410,55,32,4)}
+            ${genTable(10,'rect_v',165,530,35,45,4)} ${genTable(11,'round',320,430,50,50,2)} ${genTable(12,'round',430,390,50,50,2)}
+            ${genTable(13,'round',530,450,50,50,2)} ${genTable(14,'round',580,380,50,50,2)} ${genTable(15,'round',50,220,55,55,4)}
+            ${genTable(16,'rect_v',165,320,35,45,4)} ${genTable(18,'round',320,230,50,50,2)} ${genTable(19,'round',430,190,50,50,2)}
+            ${genTable(20,'round',525,180,50,50,2)} ${genTable(21,'rect_h',30,50,55,32,4)} ${genTable(22,'oval',175,50,90,40,6)}
+            ${genTable(23,'oval',355,50,90,40,6)} ${genTable(24,'oval',525,50,90,40,6)} ${genTable(25,'oval',685,50,90,40,6)}
+            ${genTable(26,'oval_v',700,210,40,85,6)} ${genTable(27,'rect_v',685,315,40,55,6)} ${genTable(28,'rect_v',685,425,40,55,6)}
+            ${genTable(29,'round',580,250,50,50,2)} ${genTable(30,'round',320,330,50,50,2)} ${genTable(31,'rect_v',165,430,35,45,4)}
+            ${genTable(32,'rect_v',162,175,40,55,6)}
+        </svg>`
+    },
+    summer: {
+        name: 'Летник',
+        svg: `<svg viewBox="0 0 700 750" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="750" fill="#141827" rx="12"/>
+            <rect x="145" y="390" width="40" height="140" rx="4" fill="#3a3d4e"/><text x="165" y="465" class="room-label" fill="#999" writing-mode="vertical-rl">ТЕРРАСА</text>
+            ${genTable(55,'round',60,50,50,50,2)} ${genTable(54,'rect_h',50,170,90,35,4)} ${genTable(53,'rect_h',50,300,90,35,4)}
+            ${genTable(52,'rect_h',50,440,90,35,4)} ${genTable(51,'rect_h',50,590,90,35,4)} ${genTable(45,'rect_v',225,130,35,50,4)}
+            ${genTable(44,'rect_v',225,255,35,50,4)} ${genTable(42,'rect_h',225,490,90,35,4)} ${genTable(41,'rect_h',225,595,90,35,4)}
+            ${genTable(46,'rect_v',495,610,40,55,6)} ${genTable(47,'round',570,470,50,50,2)} ${genTable(49,'round',610,340,50,50,2)}
+            ${genTable(50,'round',510,275,55,55,4,'#22c55e')}
+        </svg>`
+    },
+    hall2: {
+        name: 'Зал 2 этаж',
+        svg: `<svg viewBox="0 0 750 780" xmlns="http://www.w3.org/2000/svg"><rect width="750" height="780" fill="#141827" rx="12"/>
+            <rect x="0" y="520" width="330" height="18" fill="#565656"/>
+            <rect x="315" y="520" width="18" height="230" fill="#565656"/>
+            <rect x="245" y="505" width="70" height="18" fill="#565656"/>
+            <rect x="455" y="700" width="40" height="40" rx="4" fill="#3a3d4e"/><text x="475" y="725" class="room-label" fill="#999">Л</text>
+            ${genTable(71,'rect_h',90,35,110,55,6,'#22c55e','Бозайғыр','2/1 каб')}
+            ${genTable(72,'rect_h',390,35,140,55,7,'#22c55e','Саржайлау','2/7 каб')}
+            ${genTable(80,'rect_h',385,120,65,35,2,'#cfcfcf')}
+            ${genTable(81,'rect_v',470,160,35,50,2)} ${genTable(82,'rect_v',470,240,35,50,2)}
+            ${genTable(83,'rect_v',470,315,35,50,2)} ${genTable(84,'rect_v',470,390,35,50,2)}
+            ${genTable(85,'rect_v',470,470,35,50,2)} ${genTable(86,'rect_v',470,545,35,50,2)}
+            ${genTable(73,'round',585,205,55,55,6,'#22c55e','Қосбасар','2/2 каб')}
+            ${genTable(75,'round',585,345,55,55,6,'#22c55e','Жазғы қайғы','2/3 каб')}
+            ${genTable(74,'round',585,485,55,55,6,'#22c55e','Көкіл','2/4 каб')}
+            ${genTable(76,'rect_v',585,610,40,85,6,'#22c55e','Кішкентай','2/5 каб')}
+            ${genTable(64,'round',75,585,50,50,4)} ${genTable(65,'round',145,595,55,55,6)} ${genTable(66,'round',215,585,50,50,4)}
+            ${genTable(63,'round',55,685,50,50,2)} ${genTable(62,'round',140,700,50,50,2)} ${genTable(61,'round',230,700,50,50,2)}
+            <text x="170" y="528" class="room-label" fill="#aaa">Панорама в зал</text>
+            <text x="285" y="513" class="room-label" fill="#aaa">Құдалық</text>
+        </svg>`
+    }
+};
+
+let currentHall = 'hall1';
+let selectedTable = null;
+
+function loadHall(hallId) {
+    currentHall = hallId;
+    document.querySelectorAll('.hall-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.hall-tab[data-hall="${hallId}"]`)?.classList.add('active');
+    document.getElementById('floorPlan').innerHTML = halls[hallId].svg;
+    document.querySelectorAll('.table-shape').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            selectedTable = this.dataset.table;
+            openBookingModal(selectedTable);
+        });
+    });
+}
+
+function openBookingModal(tableId) {
+    const overlay = document.getElementById('modalOverlay');
+    const card = document.getElementById('modalCard');
+    const timeOpts = generateTimeOptions();
+    card.innerHTML = `
+        <h3>Стол №${tableId}</h3>
+        <div class="table-number">№${tableId}</div>
+        <img src="Стол №${tableId}.jpg" alt="Фото стола №${tableId}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="placeholder-text" style="display:none;">🖼️ Фото не найдено</div>
+        <p class="table-info">🏛️ ${halls[currentHall].name} | 📍 Алматы, Абылайхана 55</p>
+        <input type="text" id="bookSurname" placeholder="Фамилия">
+        <input type="text" id="bookName" placeholder="Имя">
+        <input type="tel" id="bookPhone" placeholder="Телефон">
+        <input type="number" id="bookGuests" placeholder="Количество персон" min="1" max="20">
+        <input type="date" id="bookDate">
+        <select id="bookTime">${timeOpts}</select>
+        <textarea id="bookComment" rows="2" placeholder="Комментарий (по желанию)"></textarea>
+        <div class="btn-row">
+            <button class="btn btn-close" onclick="closeModal()">Закрыть</button>
+            <button class="btn btn-book" onclick="submitBooking()">📅 Забронировать</button>
+        </div>
+    `;
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+async function submitBooking() {
+    const surname = document.getElementById('bookSurname').value.trim();
+    const name = document.getElementById('bookName').value.trim();
+    const phone = document.getElementById('bookPhone').value.trim();
+    const guests = document.getElementById('bookGuests').value;
+    const date = document.getElementById('bookDate').value;
+    const time = document.getElementById('bookTime').value;
+    const comment = document.getElementById('bookComment').value.trim();
+    
+    if (!surname || !name || !phone || !date) {
+        showToast('❌ Заполните фамилию, имя, телефон и дату!');
+        return;
+    }
+    
+    const fullName = `${surname} ${name}`;
+    const hallName = halls[currentHall].name;
+    
+    const booking = {
+        id: Date.now(),
+        table: selectedTable,
+        hall: currentHall,
+        hallName: hallName,
+        name: fullName,
+        phone: phone,
+        guests: guests || '—',
+        date: date,
+        time: time || '—',
+        special: comment || '',
+        restaurant: 'Sandyq Алматы, Абылайхана 55',
+        timestamp: new Date().toISOString()
+    };
+    
+    // Сохраняем локально
+    const bookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+    bookings.push(booking);
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+    
+    // Сохраняем в облако
+    await saveBookingToCloud(booking);
+    
+    // Отправляем в Telegram
+    const msg = `📅 <b>БРОНИРОВАНИЕ СТОЛА</b>\n🍽️ Sandyq Алматы, Абылайхана 55\n🏛️ ${hallName}\n🪑 Стол №${selectedTable}\n\n👤 ${fullName}\n📞 ${phone}\n👥 ${guests||'—'} персон\n📅 ${date}\n⏰ ${time||'—'}${comment?`\n💬 ${comment}`:''}`;
+    
+    try {
+        await fetch(`${TELEGRAM_API}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: msg,
+                parse_mode: 'HTML',
+                reply_markup: JSON.stringify({
+                    inline_keyboard: [[{ text: '🔗 Открыть админку', url: 'https://dzhalaliddin.github.io/Sandyqworld/admin.html' }]]
+                })
+            })
+        });
+    } catch(e) {}
+    
+    closeModal();
+    showToast('✅ Бронирование отправлено!');
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+async function saveBookingToCloud(booking) {
+    try {
+        const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        const data = await res.json();
+        const bookings = data.record.bookings || [];
+        bookings.push(booking);
+        await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: { 'X-Master-Key': JSONBIN_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bookings: bookings, orders: data.record.orders || [] })
+        });
+    } catch(e) {
+        console.warn('Ошибка сохранения брони в облако:', e);
+    }
+}
+
+document.querySelectorAll('.hall-tab').forEach(btn => btn.addEventListener('click', () => loadHall(btn.dataset.hall)));
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+loadHall('hall1');
+</script>
+</body>
+</html>
