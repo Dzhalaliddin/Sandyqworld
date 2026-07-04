@@ -7,74 +7,37 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Стили только для админки */
-    .login-box{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;width:380px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.5)}
-    .login-box h1{font-size:2rem;margin-bottom:10px;color:#f7971e}
-    .login-box input{width:100%;padding:14px;margin:10px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:white;font-size:1rem;outline:none}
-    .login-box input:focus{border-color:#f7971e}
-    .login-box button{width:100%;padding:14px;margin-top:15px;background:linear-gradient(135deg,#f7971e,#e67e22);border:none;border-radius:12px;color:white;font-size:1.1rem;font-weight:700;cursor:pointer}
-    .login-box button:hover{box-shadow:0 8px 25px rgba(247,151,30,0.5)}
-    .error{color:#e74c3c;margin-top:10px;display:none}
-    .admin-panel{display:none;width:100%;max-width:1400px;padding:30px}
-    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:15px}
-    .admin-nav{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .admin-nav a,.admin-nav button{padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;color:white;text-decoration:none;cursor:pointer;font-size:0.9rem;transition:all 0.3s}
-    .admin-nav a:hover,.admin-nav button:hover{background:rgba(255,255,255,0.1)}
-    .admin-nav a.active{background:#f7971e;color:white;border-color:#f7971e}
-    .logout-btn{background:#e74c3c!important;border:none!important}
-    .back-link{color:#f7971e;text-decoration:none;font-size:0.9rem;display:inline-flex;align-items:center;gap:5px;padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px}
-    .total-orders{background:rgba(255,255,255,0.05);padding:12px 24px;border-radius:18px}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;margin-bottom:30px}
-    .stat-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px;text-align:center}
-    .stat-value{font-size:1.8rem;font-weight:800;color:#f7971e}
-    .stat-label{font-size:0.8rem;color:rgba(255,255,255,0.5)}
-    .chart-container{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:30px}
-    .chart-bars{display:flex;align-items:flex-end;gap:6px;height:200px;padding:10px 0}
-    .chart-bar{flex:1;background:linear-gradient(180deg,#f7971e,#e67e22);border-radius:6px 6px 0 0;min-width:25px;position:relative;cursor:pointer;transition:all 0.3s}
-    .chart-bar:hover{opacity:0.8;transform:scaleY(1.02)}
-    .chart-bar-value{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:0.7rem;font-weight:700;color:#f7971e;white-space:nowrap}
-    .chart-bar-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:0.65rem;color:rgba(255,255,255,0.5);white-space:nowrap}
-    .dishes-stats{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;margin-bottom:30px}
-    .dish-stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-    .dish-stat-qty{font-weight:700;color:#f7971e}
-    .date-filter{display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
-    .date-filter input,.date-filter select{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:10px 14px;border-radius:12px;color:white;color-scheme:dark;font-size:0.9rem}
-    .date-filter input:focus,.date-filter select:focus{border-color:#f7971e;outline:none}
-    .order-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.06);border-left:3px solid #f7971e;border-radius:16px;padding:20px;margin-bottom:16px;transition:all 0.3s}
-    .order-card:hover{transform:translateX(4px);border-color:rgba(247,151,30,0.3)}
-    .booking-card{background:rgba(255,255,255,0.04);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.06);border-left:3px solid #3498db;border-radius:16px;padding:20px;margin-bottom:16px;transition:all 0.3s}
-    .booking-card:hover{transform:translateX(4px);border-color:rgba(52,152,219,0.3)}
-    .order-total{font-size:1.2rem;font-weight:700;color:#f7971e;text-align:right;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
-    .btn{padding:7px 14px;border:none;border-radius:12px;cursor:pointer;font-size:0.85rem;color:white;transition:all 0.3s}
-    .btn:hover{transform:scale(1.05);box-shadow:0 4px 15px rgba(0,0,0,0.3)}
-    .btn-print{background:#9b59b6}
-    .btn-pdf{background:#e67e22}
-    .btn-delete{background:#e74c3c}
-    .btn-refresh{background:#2ecc71}
-    .btn-preorder{background:#3498db}
-    .btn-excel{background:#217346}
-    .btn-sync{background:linear-gradient(135deg,#6c5ce7,#a29bfe)}
-    .empty-orders{text-align:center;color:rgba(255,255,255,0.3);padding:50px}
-    .section-title{font-size:1.3rem;font-weight:700;margin:25px 0 15px;color:#f7971e}
-    .booking-stats-table{width:100%;border-collapse:collapse;margin-top:15px}
-    .booking-stats-table th,.booking-stats-table td{padding:10px;border:1px solid rgba(255,255,255,0.08);font-size:0.9rem}
-    .booking-stats-table th{background:rgba(247,151,30,0.2);color:#f7971e}
-    .sync-status{position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);padding:12px 20px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);font-size:0.85rem;z-index:100;display:none}
-    .sync-status.show{display:block}
-    .sync-status.success{border-color:#2ecc71}
-    .sync-status.error{border-color:#e74c3c}
-    @media(max-width:768px){
-      .login-box{width:90%;padding:30px}
-      .admin-panel{padding:15px}
-      .admin-nav a,.admin-nav button{padding:8px 12px;font-size:0.75rem}
-      .stats-grid{grid-template-columns:1fr 1fr;gap:10px}
-      .chart-bars{height:140px}
+    /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ТЕМЫ В АДМИНКЕ ===== */
+    .theme-btn-admin {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      color: #f7971e;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
     }
-    @media(max-width:480px){
-      .admin-nav{gap:5px}
-      .admin-nav a,.admin-nav button{padding:6px 10px;font-size:0.7rem}
-      .stats-grid{grid-template-columns:1fr}
-      .chart-bars{height:100px;gap:3px}
+    .theme-btn-admin:hover {
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 20px rgba(247,151,30,0.3);
+    }
+    body.light-theme .theme-btn-admin {
+      color: #c49a2a;
+      border-color: rgba(0,0,0,0.2);
+    }
+    body.light-theme .theme-btn-admin:hover {
+      background: rgba(0,0,0,0.08);
+    }
+    .admin-header .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
   </style>
 </head>
@@ -91,8 +54,13 @@
 <div class="admin-panel" id="admin-panel">
   <div class="admin-header">
     <div><h1>📊 Sandyq Admin</h1><p style="opacity:0.6">📍 Алматы, Абылайхана 55</p></div>
-    <div class="admin-nav">
+    <div class="top-controls">
+      <button class="theme-btn-admin" onclick="toggleThemeAdmin()" id="theme-btn-admin">
+        <i class="fas fa-moon" id="theme-icon-admin"></i>
+      </button>
       <a href="index.html" class="back-link">← На сайт</a>
+    </div>
+    <div class="admin-nav">
       <button class="btn-refresh" onclick="loadAllData()" title="Обновить">🔄</button>
       <button class="btn-sync" onclick="syncWithCloud()" title="Синхронизировать с облаком">☁️</button>
       <a href="#" onclick="switchTab('orders');return false" class="active" id="tab-orders">📋 Заказы</a>
@@ -125,13 +93,73 @@
 
 <div class="sync-status" id="sync-status"></div>
 
-<script src="scripts.js"></script>
+<!-- Модалка редактирования заказа -->
+<div class="modal" id="edit-order-modal">
+  <div class="modal-content modal-edit">
+    <div class="modal-header">
+      <h2>✏️ Редактирование заказа #<span id="edit-order-id"></span></h2>
+      <button class="close-modal" onclick="closeEditModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Гость</label>
+        <input type="text" id="edit-guest-name">
+      </div>
+      <div class="form-group">
+        <label>Телефон</label>
+        <input type="text" id="edit-guest-phone">
+      </div>
+      <div class="form-group">
+        <label>Дата</label>
+        <input type="date" id="edit-order-date">
+      </div>
+      <h3 style="margin:15px 0 10px;">Позиции заказа</h3>
+      <div id="edit-items-container"></div>
+      <div style="display:flex;gap:10px;margin-top:15px;flex-wrap:wrap;">
+        <button class="btn btn-add-item" onclick="addEditItemRow()">➕ Добавить блюдо</button>
+        <button class="btn btn-save-order" onclick="saveEditedOrder()">💾 Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+// ============================================================
+//  КОНФИГУРАЦИЯ
+// ============================================================
+const TELEGRAM_BOT_TOKEN = '1745757539:AAEUlkcpb8z7X7s8deuAJPD1saXM92YmOXA';
+const TELEGRAM_CHAT_ID = '-1004480995803';
+const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+const JSONBIN_KEY = '$2a$10$AxIfA8p7dq6td0BYtWWuhecnyqCJbsTGoo.oWIds3H01C43GvLGuu';
+const JSONBIN_BIN_ID = '6a411873f5f4af5e293d0edd';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+// ============================================================
+//  ТЕМА ДЛЯ ADMIN
+// ============================================================
+function toggleThemeAdmin() {
+  document.body.classList.toggle('light-theme');
+  const icon = document.getElementById('theme-icon-admin');
+  const isLight = document.body.classList.contains('light-theme');
+  icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+// Синхронизация темы при загрузке
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-theme');
+    const icon = document.getElementById('theme-icon-admin');
+    if (icon) icon.className = 'fas fa-sun';
+  }
+})();
+
 // ============================================================
 //  АДМИН-СПЕЦИФИЧНЫЙ JS
 // ============================================================
 const ADMIN_PASSWORD = 'Sandyq2024';
 let allOrders = [], allBookings = [], currentTab = 'orders';
+let editingOrderIndex = -1;
 
 function checkPassword(){
   if(document.getElementById('password').value===ADMIN_PASSWORD){
@@ -235,6 +263,7 @@ function loadOrders(filterDate=''){
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         <button class="btn btn-print" onclick="printOrder(${ri})">🖨️</button>
         <button class="btn btn-pdf" onclick="downloadOrderPDF(${ri})">📄</button>
+        <button class="btn btn-edit" onclick="openEditOrder(${ri})">✏️</button>
         <button class="btn btn-delete" onclick="deleteOrder(${ri})">🗑️</button>
       </div>
     </div>`;
@@ -389,6 +418,157 @@ function downloadAllPDF(){
   setTimeout(() => w.print(), 500);
 }
 
+// ============================================================
+//  РЕДАКТИРОВАНИЕ ЗАКАЗА
+// ============================================================
+function openEditOrder(idx){
+  editingOrderIndex = idx;
+  const order = allOrders[idx];
+  if(!order) return;
+  
+  document.getElementById('edit-order-id').textContent = String(order.id).slice(-6);
+  document.getElementById('edit-guest-name').value = order.guest?.name || '';
+  document.getElementById('edit-guest-phone').value = order.guest?.phone || '';
+  document.getElementById('edit-order-date').value = order.date || '';
+  
+  renderEditItems(order.items || []);
+  document.getElementById('edit-order-modal').classList.add('open');
+}
+
+function closeEditModal(){
+  document.getElementById('edit-order-modal').classList.remove('open');
+  editingOrderIndex = -1;
+}
+
+function renderEditItems(items){
+  const container = document.getElementById('edit-items-container');
+  if(!items.length){
+    container.innerHTML = '<p style="color:rgba(255,255,255,0.4);">Нет позиций</p>';
+    return;
+  }
+  container.innerHTML = items.map((item, idx) => `
+    <div class="edit-item-row" data-idx="${idx}">
+      <select class="edit-item-select">
+        ${getAllMenuItemsOptions(item.name?.ru || '')}
+      </select>
+      <input type="number" class="edit-item-qty" value="${item.quantity || 1}" min="1" style="width:70px;">
+      <input type="number" class="edit-item-price" value="${item.price || 0}" min="0" style="width:100px;">
+      <button class="btn btn-remove-item btn-sm" onclick="removeEditItem(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+function getAllMenuItemsOptions(selected){
+  let options = '';
+  const menuDataLocal = {
+    salads: { items: [{ name: { ru: 'Салат из свежих овощей' }, price: 3390 }, { name: { ru: 'Салат «Костұра»' }, price: 5590 }] },
+    main: { items: [{ name: { ru: '«Қазақ ет» (Бешбармақ)' }, price: 7990 }, { name: { ru: '«Борша ет»' }, price: 8890 }] }
+  };
+  // Простой вариант — добавь все блюда из menuData
+  const allItems = [
+    { name: 'Салат из свежих овощей', price: 3390 },
+    { name: 'Салат «Костұра»', price: 5590 },
+    { name: 'Салат «Сандық»', price: 5590 },
+    { name: 'Баклажаны в соусе из курта', price: 4490 },
+    { name: 'Ассорти овощей', price: 5590 },
+    { name: '«Қазақ ет» (Бешбармақ)', price: 7990 },
+    { name: '«Борша ет»', price: 8890 },
+    { name: '«Бал қуырдақ»', price: 7790 },
+    { name: '«Ши қуырдақ»', price: 7790 },
+    { name: '«Бұқпа»', price: 8890 },
+    { name: '«Қымыз қабырға»', price: 8890 },
+    { name: '«Қақталған қазы»', price: 8890 },
+    { name: 'Горная форель', price: 7290 },
+    { name: '«Нан салма»', price: 6690 },
+    { name: '«Борша ет» Шоу', price: 27990 },
+    { name: 'Томленая шея баранины Шоу', price: 28990 },
+    { name: 'Бауырсаки', price: 2290 },
+    { name: '«Сый табақ» (5-6)', price: 72990 },
+    { name: '«Той табақ» (5-6)', price: 72990 },
+    { name: '«Хан сырбаз» (5-6)', price: 105990 },
+    { name: '«Қарын көмбе» (5-6)', price: 99990 },
+    { name: '«Бел көтерер» (5-6)', price: 99990 },
+    { name: '«Бекіре» (5-6)', price: 105990 }
+  ];
+  allItems.forEach(item => {
+    const selectedAttr = item.name === selected ? 'selected' : '';
+    options += `<option value="${item.name}" ${selectedAttr} data-price="${item.price}">${item.name}</option>`;
+  });
+  return options;
+}
+
+function addEditItemRow(){
+  const container = document.getElementById('edit-items-container');
+  const rows = container.querySelectorAll('.edit-item-row');
+  const idx = rows.length;
+  const row = document.createElement('div');
+  row.className = 'edit-item-row';
+  row.dataset.idx = idx;
+  row.innerHTML = `
+    <select class="edit-item-select">
+      ${getAllMenuItemsOptions('')}
+    </select>
+    <input type="number" class="edit-item-qty" value="1" min="1" style="width:70px;">
+    <input type="number" class="edit-item-price" value="0" min="0" style="width:100px;">
+    <button class="btn btn-remove-item btn-sm" onclick="removeEditItem(${idx})">✕</button>
+  `;
+  container.appendChild(row);
+  
+  const select = row.querySelector('.edit-item-select');
+  select.addEventListener('change', function(){
+    const opt = this.options[this.selectedIndex];
+    const price = opt.dataset.price || 0;
+    const priceInput = this.closest('.edit-item-row').querySelector('.edit-item-price');
+    if(priceInput) priceInput.value = price;
+  });
+}
+
+function removeEditItem(idx){
+  const rows = document.querySelectorAll('.edit-item-row');
+  const row = rows[idx];
+  if(row) row.remove();
+}
+
+async function saveEditedOrder(){
+  if(editingOrderIndex < 0) return;
+  
+  const order = allOrders[editingOrderIndex];
+  if(!order) return;
+  
+  order.guest.name = document.getElementById('edit-guest-name').value.trim() || 'Гость';
+  order.guest.phone = document.getElementById('edit-guest-phone').value.trim() || '—';
+  order.date = document.getElementById('edit-order-date').value || new Date().toISOString().slice(0,10);
+  
+  const rows = document.querySelectorAll('.edit-item-row');
+  const items = [];
+  rows.forEach(row => {
+    const select = row.querySelector('.edit-item-select');
+    const qty = parseInt(row.querySelector('.edit-item-qty').value) || 1;
+    const price = parseInt(row.querySelector('.edit-item-price').value) || 0;
+    if(select && select.value){
+      items.push({
+        name: { ru: select.value },
+        quantity: qty,
+        price: price,
+        category: 'main'
+      });
+    }
+  });
+  order.items = items;
+  
+  const sub = items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const serv = Math.round(sub * 0.15);
+  order.subtotal = sub;
+  order.service = serv;
+  order.total = sub + serv;
+  
+  saveToLocalStorage();
+  await syncWithCloud();
+  closeEditModal();
+  loadOrders(document.getElementById('filter-date')?.value || '');
+  showSyncStatus('✅ Заказ обновлён!', 'success');
+}
+
 function deleteOrder(idx){
   if(!confirm('Удалить заказ?')) return;
   allOrders.splice(idx, 1);
@@ -416,6 +596,13 @@ function clearAllData(){
   loadAllData();
   showSyncStatus('🗑️ Все данные удалены', 'success');
 }
+
+document.getElementById('edit-order-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeEditModal();
+});
 
 setInterval(loadAllData, 30000);
 </script>
