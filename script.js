@@ -55,158 +55,40 @@ async function saveOrderToCloud(order) {
   }
 }
 
-// ============================================================
-//  ДАННЫЕ МЕНЮ SANDYQ АЛМАТЫ
-// ============================================================
-const menuData = {
-  salads: {
-    name: { ru: 'Салаты', kk: 'Салаттар', en: 'Salads' }, icon: 'fa-leaf',
-    items: [
-      { id: 1, name: { ru: 'Салат из свежих овощей', kk: 'Балғын көкөніс салаты', en: 'Fresh Vegetable Salad' }, price: 3390, image: 'images/salad-fresh.jpg', category: 'salads' },
-      { id: 2, name: { ru: 'Салат «Костұра»', kk: 'Ысталған жылқы етімен «Костұра» салаты', en: 'Salad "Qostura"' }, price: 5590, image: 'images/salad-kostyra.jpg', category: 'salads' },
-      { id: 3, name: { ru: 'Салат «Сандық» в имбирном соусе', kk: 'Зімбір тұздығымен «Сандық» салаты', en: 'Salad "Sandyq"' }, price: 5590, image: 'images/salad-sandyq.jpg', category: 'salads' },
-      { id: 4, name: { ru: 'Баклажаны в соусе из курта', kk: 'Кұрт тұздығындағы баклажан', en: 'Eggplant in qurt sauce' }, price: 4490, image: 'images/eggplant-qurt.jpg', category: 'salads' },
-      { id: 5, name: { ru: 'Ассорти овощей', kk: 'Сарымсақ майымен көкөністер', en: 'Vegetables garlic butter' }, price: 5590, image: 'images/seasonal-vegetables.jpg', category: 'salads' }
-    ]
-  },
-  deli: {
-    name: { ru: 'Деликатесы', kk: 'Тіскебасарлар', en: 'Delicacies' }, icon: 'fa-star',
-    items: [
-      { id: 6, name: { ru: '«Құйрық май» с кумысом', kk: '«Құйрық май»', en: '«Kuiryk May»' }, price: 2290, image: 'images/kuiryk-may.jpg', category: 'deli' },
-      { id: 7, name: { ru: '«Шеке»', kk: '«Шеке»', en: '«Sheke»' }, price: 6690, image: 'images/sheke.jpg', category: 'deli' },
-      { id: 8, name: { ru: '«Жілік май»', kk: '«Жілік май»', en: '«Zhylyk May»' }, price: 7290, image: 'images/zhilyk-may.jpg', category: 'deli' },
-      { id: 9, name: { ru: '«Ұйқы ашар»', kk: '«Ұйқы ашар»', en: '«Uyky ashar»' }, price: 6690, image: 'images/uyky-ashar.jpg', category: 'deli' },
-      { id: 10, name: { ru: '«Құйрық бауыр»', kk: '«Құйрық бауыр»', en: '«Quiryq bauyr»' }, price: 7290, image: 'images/quiryq-bauyr.jpg', category: 'deli' },
-      { id: 11, name: { ru: '«Үлпершек»', kk: '«Үлпершек»', en: '«Ulpershek»' }, price: 7290, image: 'images/ulpershek.jpg', category: 'deli' },
-      { id: 12, name: { ru: 'Осетровая икра', kk: 'Бекіре уылдырығы', en: 'Sturgeon caviar' }, price: 7790, image: 'images/sturgeon-caviar.jpg', category: 'deli' }
-    ]
-  },
-  soups: {
-    name: { ru: 'Супы', kk: 'Сорпалар', en: 'Soups' }, icon: 'fa-utensil-spoon',
-    items: [
-      { id: 13, name: { ru: 'Суп «Жібек жолы»', kk: '«Жібек жолы»', en: '«Zhibek Zholy»' }, price: 4490, image: 'images/zhibek-zholy.jpg', category: 'soups' },
-      { id: 14, name: { ru: 'Коже «Nomad»', kk: '«Nomad» көже', en: '"Nomad Kozhe"' }, price: 5590, image: 'images/nomad-kozhe.jpg', category: 'soups' },
-      { id: 15, name: { ru: 'Суп из индейки', kk: 'Күркетауық сорпасы', en: 'Turkey soup' }, price: 4490, image: 'images/turkey-soup.jpg', category: 'soups' },
-      { id: 16, name: { ru: 'Суп из перепелки', kk: 'Бөдене сорпасы', en: 'Quail soup' }, price: 5090, image: 'images/quail-soup.jpg', category: 'soups' },
-      { id: 17, name: { ru: '«Жарма көже»', kk: '«Жарма көже»', en: '«Zharma kozhe»' }, price: 3390, image: 'images/zharma-kozhe.jpg', category: 'soups' },
-      { id: 18, name: { ru: '«Көл кеспе»', kk: '«Көл кеспе»', en: '«Kol kespe»' }, price: 4490, image: 'images/kol-kespe.jpg', category: 'soups' }
-    ]
-  },
-  main: {
-    name: { ru: 'Основные блюда', kk: 'Негізгі тағамдар', en: 'Main Dishes' }, icon: 'fa-fire',
-    items: [
-      { id: 19, name: { ru: '«Қазақ ет» (Бешбармақ)', kk: '«Қазақ ет»', en: '«Qazaq et»' }, price: 7990, image: 'images/qazaq-et.jpg', category: 'main' },
-      { id: 20, name: { ru: '«Борша ет» на камнях', kk: '«Борша ет»', en: '"Borsha et"' }, price: 8890, image: 'images/borsha-et.jpg', category: 'main' },
-      { id: 21, name: { ru: '«Борша ет» Шоу', kk: '«Борша ет» Шоу', en: '"Borsha et" Show' }, price: 27990, image: 'images/borsha-et-show.jpg', category: 'show' },
-      { id: 22, name: { ru: '«Бал қуырдақ»', kk: '«Бал қуырдақ»', en: '«Bal kuyrdak»' }, price: 7790, image: 'images/bal-kuyrdak.jpg', category: 'main' },
-      { id: 23, name: { ru: '«Ши қуырдақ»', kk: '«Ши қуырдақ»', en: '«Shi kuyrdak»' }, price: 7790, image: 'images/shi-kuyrdak.jpg', category: 'main' },
-      { id: 24, name: { ru: '«Бұқпа» из говядины', kk: '«Бұқпа»', en: '«Bugpa»' }, price: 8890, image: 'images/bugpa.jpg', category: 'main' },
-      { id: 25, name: { ru: '«Қымыз қабырға»', kk: '«Қымыз қабырға»', en: '"Qymyz Qabyrga"' }, price: 8890, image: 'images/qymyz-qabyrga.jpg', category: 'main' },
-      { id: 26, name: { ru: 'Томленая шея баранины Шоу', kk: 'Бұқтырылған қой мойны', en: 'Braised lamb neck' }, price: 28990, image: 'images/lamb-neck.jpg', category: 'show' },
-      { id: 27, name: { ru: '«Қақталған қазы»', kk: '«Қақталған қазы»', en: '"Kaktalgan kazy"' }, price: 8890, image: 'images/kaktalgan-kazy.jpg', category: 'main' },
-      { id: 28, name: { ru: 'Горная форель', kk: 'Тау бақтақ балығы', en: 'Mountain trout' }, price: 7290, image: 'images/trout.jpg', category: 'main' },
-      { id: 29, name: { ru: '«Нан салма»', kk: '«Нан салма»', en: '"Nan salma"' }, price: 6690, image: 'images/nan-salma.jpg', category: 'main' }
-    ]
-  },
-  show: {
-    name: { ru: 'Блюда Шоу', kk: 'Шоу тағамдар', en: 'Show Dishes' }, icon: 'fa-theater-masks',
-    items: [
-      { id: 21, name: { ru: '«Борша ет» Шоу', kk: '«Борша ет» Шоу', en: '"Borsha et" Show' }, price: 27990, image: 'images/borsha-et-show.jpg', category: 'show' },
-      { id: 26, name: { ru: 'Томленая шея баранины Шоу', kk: 'Бұқтырылған қой мойны', en: 'Braised lamb neck' }, price: 28990, image: 'images/lamb-neck.jpg', category: 'show' }
-    ]
-  },
-  bakery: {
-    name: { ru: 'Выпечка', kk: 'Нан-тоқаш', en: 'Bakery' }, icon: 'fa-bread-slice',
-    items: [
-      { id: 30, name: { ru: 'Бауырсаки с вареньем', kk: 'Бауырсақтар', en: 'Baursak' }, price: 2290, image: 'images/baursak-jam.jpg', category: 'bakery' },
-      { id: 31, name: { ru: 'Баурсаки с сыром', kk: 'Ірімшік бауырсақ', en: 'Baursak cheese' }, price: 2290, image: 'images/baursak-cheese.jpg', category: 'bakery' },
-      { id: 32, name: { ru: '«Мыжыма»', kk: '«Мыжыма»', en: '«Myzhyma»' }, price: 2290, image: 'images/myzhyma.jpg', category: 'bakery' },
-      { id: 33, name: { ru: '«Бәрәміш»', kk: '«Бәрәміш»', en: '"Baramysh"' }, price: 2290, image: 'images/baramysh.jpg', category: 'bakery' },
-      { id: 34, name: { ru: '«Таба нан»', kk: '«Таба нан»', en: '"Taba nan"' }, price: 2890, image: 'images/taba-nan.jpg', category: 'bakery' },
-      { id: 35, name: { ru: '«Қаттама»', kk: '«Қаттама»', en: '«Kattama»' }, price: 2890, image: 'images/kattama.jpg', category: 'bakery' },
-      { id: 36, name: { ru: '«Нан астау»', kk: '«Нан астау»', en: '«Nan astau»' }, price: 9990, image: 'images/nan-astau.jpg', category: 'bakery' }
-    ]
-  },
-  desserts: {
-    name: { ru: 'Десерты', kk: 'Тәттілер', en: 'Desserts' }, icon: 'fa-cake',
-    items: [
-      { id: 37, name: { ru: '«Чизкейк» из тары', kk: '«Чизкейк»', en: '«Cheesecake»' }, price: 4490, image: 'images/cheesecake.jpg', category: 'desserts' },
-      { id: 38, name: { ru: 'Финик с орехами', kk: 'Құрма', en: 'Stuffed dates' }, price: 3990, image: 'images/stuffed-dates.jpg', category: 'desserts' },
-      { id: 39, name: { ru: 'Сладости «Сандық»', kk: '«Сандық» тәттілері', en: 'Sweets «Sandyq»' }, price: 5590, image: 'images/sandyq-sweets.jpg', category: 'desserts' },
-      { id: 40, name: { ru: 'Десерт «Сүмесүт»', kk: '«Сүмесүт»', en: '"Sumesut"' }, price: 4490, image: 'images/sumesut.jpg', category: 'desserts' },
-      { id: 41, name: { ru: 'Хрустящий пирог', kk: 'Үй бәліші', en: 'Crispy pie' }, price: 3990, image: 'images/homemade-pie.jpg', category: 'desserts' },
-      { id: 42, name: { ru: '«Төңкерме»', kk: '«Төңкерме»', en: '«Tonkerme»' }, price: 3390, image: 'images/tonkerme.jpg', category: 'desserts' },
-      { id: 43, name: { ru: '«Майсөк»', kk: '«Майсөк»', en: '«Maisok»' }, price: 3390, image: 'images/maisok.jpg', category: 'desserts' },
-      { id: 44, name: { ru: '"Алматинский апорт"', kk: '"Алматы апорты"', en: '"Almaty aport"' }, price: 3990, image: 'images/almaty-aport.jpg', category: 'desserts' },
-      { id: 45, name: { ru: 'Мороженое', kk: 'Балмұздақ', en: 'Ice Cream' }, price: 2290, image: 'images/ice-cream.jpg', category: 'desserts' }
-    ]
-  },
-  party: {
-    name: { ru: 'На компанию', kk: 'Ұжымдық', en: 'Group' }, icon: 'fa-users',
-    items: [
-      { id: 46, name: { ru: '«Сый табақ» (5-6)', kk: '«Сый табақ»', en: '"Syy tabak"' }, price: 72990, image: 'images/syy-tabak.jpg', category: 'party' },
-      { id: 47, name: { ru: '«Хан сырбаз» (5-6)', kk: '«Хан сырбаз»', en: '"Khan syrbaz"' }, price: 105990, image: 'images/khan-syrbaz.jpg', category: 'party' },
-      { id: 48, name: { ru: '«Қарын көмбе» (5-6)', kk: '«Қарын көмбе»', en: '"Karyn kombe"' }, price: 99990, image: 'images/karyn-kombe.jpg', category: 'party' },
-      { id: 49, name: { ru: '«Бел көтерер» (5-6)', kk: '«Бел көтерер»', en: '"Bel koterer"' }, price: 99990, image: 'images/bel-koterer.jpg', category: 'party' },
-      { id: 50, name: { ru: '«Бекіре» с овощами', kk: '«Бекіре»', en: '"Bekire"' }, price: 105990, image: 'images/bekire.jpg', category: 'party' }
-    ]
-  },
-  drinks: {
-    name: { ru: 'Напитки', kk: 'Сусындар', en: 'Drinks' }, icon: 'fa-wine-glass-alt',
-    items: [
-      { id: 51, name: { ru: 'Шубат', kk: 'Шұбат', en: 'Shubat' }, price: 1790, image: 'images/shubat.jpg', category: 'drinks' },
-      { id: 52, name: { ru: 'Шалап', kk: 'Шалап', en: 'Shalap' }, price: 1990, image: 'images/shalap.jpg', category: 'drinks' },
-      { id: 53, name: { ru: 'Кумыс', kk: 'Қымыз', en: 'Kumis' }, price: 1500, image: 'images/kymyz.jpg', category: 'drinks' }
-    ]
-  },
-  garnish: {
-    name: { ru: 'Гарниры', kk: 'Гарнирлер', en: 'Sides' }, icon: 'fa-carrot',
-    items: [
-      { id: 54, name: { ru: 'Кус-кус', kk: 'Құс-құс', en: 'Couscous' }, price: 1790, image: 'images/couscous.jpg', category: 'garnish' },
-      { id: 55, name: { ru: 'Булгур', kk: 'Бұлғыр', en: 'Bulgur' }, price: 1790, image: 'images/bulgur.jpg', category: 'garnish' },
-      { id: 56, name: { ru: 'Молодой картофель', kk: 'Жас картоп', en: 'New potatoes' }, price: 1790, image: 'images/potatoes.jpg', category: 'garnish' }
-    ]
-  },
-  tea: {
-    name: { ru: 'Чаи', kk: 'Шайлар', en: 'Tea' }, icon: 'fa-mug-hot',
-    items: [
-      { id: 57, name: { ru: 'Turkistan', kk: 'Turkistan', en: 'Turkistan' }, price: 3390, image: 'images/tea-turkistan.jpg', category: 'tea' },
-      { id: 58, name: { ru: 'Sandyq шай', kk: 'Sandyq шай', en: 'Sandyq tea' }, price: 3390, image: 'images/tea-sandyq.jpg', category: 'tea' }
-    ]
-  },
-  sauces: {
-    name: { ru: 'Соусы', kk: 'Тұздықтар', en: 'Sauces' }, icon: 'fa-droplet',
-    items: [
-      { id: 59, name: { ru: 'Степные травы', kk: 'Дала шөптері', en: 'Steppe herbs' }, price: 690, image: 'images/sauce-herbs.jpg', category: 'sauces' },
-      { id: 60, name: { ru: 'Гранатовый', kk: 'Анар', en: 'Pomegranate' }, price: 690, image: 'images/sauce-pomegranate.jpg', category: 'sauces' }
-    ]
+async function saveBookingToCloud(booking) {
+  try {
+    const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
+    const data = await res.json();
+    const bookings = data.record.bookings || [];
+    bookings.push(booking);
+    await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 'X-Master-Key': JSONBIN_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookings: bookings, orders: data.record.orders || [] })
+    });
+    return true;
+  } catch(e) {
+    console.warn('Ошибка сохранения брони в облако:', e);
+    const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+    bookings.push(booking);
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+    return false;
   }
-};
+}
 
-const categoryTimeMap = {
-  salads: { icon: '🥗', timeKey: 'salads' },
-  deli: { icon: '⭐', timeKey: 'deli' },
-  soups: { icon: '🍲', timeKey: 'soups' },
-  main: { icon: '🔥', timeKey: 'hot' },
-  show: { icon: '🎭', timeKey: 'show' },
-  bakery: { icon: '🍞', timeKey: 'bakery' },
-  desserts: { icon: '🍰', timeKey: 'desserts' },
-  party: { icon: '👥', timeKey: 'party' },
-  drinks: { icon: '🥤', timeKey: 'drinks' },
-  garnish: { icon: '🥕', timeKey: 'garnish' },
-  tea: { icon: '🍵', timeKey: 'tea' },
-  sauces: { icon: '💧', timeKey: 'sauces' }
-};
+// ============================================================
+//  ДАННЫЕ МЕНЮ SANDYQ АЛМАТЫ (ВСЕ КАТЕГОРИИ)
+// ============================================================
+// ВНИМАНИЕ: menuData теперь в index.html, здесь только вспомогательные функции
+// Все данные меню хранятся в index.html для упрощения
 
-const langDict = {
-  ru: { salads:'Салаты', deli:'Деликатесы', soups:'Супы', main:'Основные', show:'Блюда Шоу', bakery:'Выпечка', desserts:'Десерты', party:'Компания', drinks:'Напитки', garnish:'Гарниры', tea:'Чаи', sauces:'Соусы', cart_title:'Заказ', cart_empty:'Корзина пуста', checkout_btn:'Оформить', guest_name:'Имя', guest_phone:'Телефон', order_date:'Дата', serving_time:'Время', special_requests:'Пожелания', cancel:'Отмена', confirm:'Подтвердить', subtotal:'Сумма', service:'Сервис 15%', total:'Итого', add:'Добавить', search_results:'Поиск', search_placeholder:'Поиск...', back:'Назад' },
-  kk: { salads:'Салаттар', deli:'Тіскебасарлар', soups:'Сорпалар', main:'Негізгі', show:'Шоу тағамдар', bakery:'Нан-тоқаш', desserts:'Тәттілер', party:'Ұжымдық', drinks:'Сусындар', garnish:'Гарнирлер', tea:'Шайлар', sauces:'Тұздықтар', cart_title:'Тапсырыс', cart_empty:'Бос', checkout_btn:'Рәсімдеу', guest_name:'Аты', guest_phone:'Телефон', order_date:'Күні', serving_time:'Уақыт', special_requests:'Тілектер', cancel:'Болдырмау', confirm:'Растау', subtotal:'Сома', service:'Қызмет 15%', total:'Барлығы', add:'Қосу', search_results:'Іздеу', search_placeholder:'Іздеу...', back:'Артқа' },
-  en: { salads:'Salads', deli:'Delicacies', soups:'Soups', main:'Main', show:'Show Dishes', bakery:'Bakery', desserts:'Desserts', party:'Group', drinks:'Drinks', garnish:'Sides', tea:'Tea', sauces:'Sauces', cart_title:'Order', cart_empty:'Empty', checkout_btn:'Checkout', guest_name:'Name', guest_phone:'Phone', order_date:'Date', serving_time:'Time', special_requests:'Notes', cancel:'Cancel', confirm:'Confirm', subtotal:'Subtotal', service:'Service 15%', total:'Total', add:'Add', search_results:'Search', search_placeholder:'Search...', back:'Back' }
-};
-
+// ============================================================
+//  ПЕРЕМЕННЫЕ СОСТОЯНИЯ
+// ============================================================
 let currentLang = 'ru';
 let cart = [];
 let currentCategory = 'salads';
+const toggleStates = {};
 
 // ============================================================
 //  ТЕМА
@@ -217,13 +99,8 @@ function toggleTheme() {
   const isLight = document.body.classList.contains('light-theme');
   icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  updateCart();
 }
-(function() {
-  if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-theme');
-    document.getElementById('theme-icon').className = 'fas fa-sun';
-  }
-})();
 
 // ============================================================
 //  НАВИГАЦИЯ
@@ -321,24 +198,94 @@ function renderCategoryPage(k) {
   if (!c) return;
   pg.style.display = 'block';
   pg.innerHTML = `<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div><div class="menu-grid">${c.items.map(renderItem).join('')}</div>`;
+  
+  // Инициализация переключателей после рендера
+  document.querySelectorAll('.toggle-group').forEach(group => {
+    const itemId = group.dataset.itemId;
+    const btns = group.querySelectorAll('.toggle-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const value = this.dataset.value;
+        btns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        toggleStates[itemId] = value === 'withHead';
+        updateTogglePrice(itemId);
+        // Обновляем цену в корзине если товар уже там
+        const cartItem = cart.find(c => c.id === parseInt(itemId));
+        if (cartItem) {
+          const item = findItemById(parseInt(itemId));
+          if (item && item.hasToggle) {
+            cartItem.price = toggleStates[itemId] ? item.price : item.priceWithoutHead;
+            updateCart();
+            saveCartToStorage();
+          }
+        }
+      });
+    });
+  });
 }
 
 function renderItem(item) {
   const ci = cart.find(c => c.id === item.id);
   const qty = ci ? ci.quantity : 0;
   const desc = item.desc ? item.desc[currentLang] : '';
+  const isLight = document.body.classList.contains('light-theme');
+  const info = item.info ? item.info[currentLang] : '';
+  const preorder = item.preorder ? item.preorder[currentLang] : '';
+  
+  // Проверяем, есть ли у товара переключатель
+  if (item.hasToggle) {
+    const isWithHead = toggleStates[item.id] !== undefined ? toggleStates[item.id] : true;
+    const currentPrice = isWithHead ? item.price : item.priceWithoutHead;
+    const priceLabel = isWithHead ? langDict[currentLang]?.withHead : langDict[currentLang]?.withoutHead;
+    
+    return `<div class="menu-item" id="item-${item.id}">
+      <img src="${item.image || 'https://via.placeholder.com/300x200'}" class="menu-item-image" onerror="this.src='https://via.placeholder.com/300x200'">
+      <div class="menu-item-content">
+        <div class="menu-item-title" style="color:${isLight ? '#2a1508' : '#fff'}">${item.name[currentLang] || item.name.ru}</div>
+        ${info ? `<div class="party-info-badge">👥 ${info}</div>` : ''}
+        ${preorder ? `<div class="preorder-badge">${preorder}</div>` : ''}
+        <div class="menu-item-desc" style="color:${isLight ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)'}">${desc}</div>
+        <div class="menu-item-footer">
+          <div class="price-with-toggle">
+            <span class="menu-item-price" id="price-${item.id}">${currentPrice.toLocaleString()} ₸</span>
+            <span class="price-label" id="label-${item.id}">${priceLabel}</span>
+          </div>
+          <div class="toggle-and-btn">
+            <div class="toggle-group" data-item-id="${item.id}">
+              <button class="toggle-btn ${isWithHead ? 'active' : ''}" data-value="withHead">${langDict[currentLang]?.withHead || 'С головой'}</button>
+              <button class="toggle-btn ${!isWithHead ? 'active' : ''}" data-value="withoutHead">${langDict[currentLang]?.withoutHead || 'Без головы'}</button>
+            </div>
+            ${qty > 0 ? 
+              `<div class="quantity-control">
+                <button class="quantity-btn" onclick="changeQuantity(${item.id},-1)" style="border-color:${isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'};color:${isLight ? '#2a1508' : '#fff'}">−</button>
+                <span class="quantity-num" style="color:${isLight ? '#2a1508' : '#fff'}">${qty}</span>
+                <button class="quantity-btn" onclick="changeQuantity(${item.id},1)" style="border-color:${isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'};color:${isLight ? '#2a1508' : '#fff'}">+</button>
+              </div>` : 
+              `<button class="add-btn" onclick="addToCart(${item.id})">${langDict[currentLang]?.add || 'Добавить'}</button>`
+            }
+          </div>
+        </div>
+        <div class="rider-trail" id="trail-${item.id}"></div>
+      </div>
+    </div>`;
+  }
+  
+  // Обычный товар (без переключателя)
   return `<div class="menu-item" id="item-${item.id}">
     <img src="${item.image || 'https://via.placeholder.com/300x200'}" class="menu-item-image" onerror="this.src='https://via.placeholder.com/300x200'">
     <div class="menu-item-content">
-      <div class="menu-item-title">${item.name[currentLang] || item.name.ru}</div>
-      ${desc ? `<div class="menu-item-desc">${desc}</div>` : ''}
+      <div class="menu-item-title" style="color:${isLight ? '#2a1508' : '#fff'}">${item.name[currentLang] || item.name.ru}</div>
+      ${info ? `<div class="party-info-badge">👥 ${info}</div>` : ''}
+      ${preorder ? `<div class="preorder-badge">${preorder}</div>` : ''}
+      ${desc ? `<div class="menu-item-desc" style="color:${isLight ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.5)'}">${desc}</div>` : ''}
       <div class="menu-item-footer">
         <span class="menu-item-price">${item.price.toLocaleString()} ₸</span>
         ${qty > 0 ? 
           `<div class="quantity-control">
-            <button class="quantity-btn" onclick="changeQuantity(${item.id},-1)">−</button>
-            <span class="quantity-num">${qty}</span>
-            <button class="quantity-btn" onclick="changeQuantity(${item.id},1)">+</button>
+            <button class="quantity-btn" onclick="changeQuantity(${item.id},-1)" style="border-color:${isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'};color:${isLight ? '#2a1508' : '#fff'}">−</button>
+            <span class="quantity-num" style="color:${isLight ? '#2a1508' : '#fff'}">${qty}</span>
+            <button class="quantity-btn" onclick="changeQuantity(${item.id},1)" style="border-color:${isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'};color:${isLight ? '#2a1508' : '#fff'}">+</button>
           </div>` : 
           `<button class="add-btn" onclick="addToCart(${item.id})">${langDict[currentLang]?.add || 'Добавить'}</button>`
         }
@@ -346,6 +293,24 @@ function renderItem(item) {
       <div class="rider-trail" id="trail-${item.id}"></div>
     </div>
   </div>`;
+}
+
+// ============================================================
+//  ОБНОВЛЕНИЕ ЦЕНЫ ПРИ ПЕРЕКЛЮЧЕНИИ
+// ============================================================
+function updateTogglePrice(itemId) {
+  const item = findItemById(parseInt(itemId));
+  if (!item || !item.hasToggle) return;
+  
+  const isWithHead = toggleStates[itemId] !== undefined ? toggleStates[itemId] : true;
+  const currentPrice = isWithHead ? item.price : item.priceWithoutHead;
+  const priceLabel = isWithHead ? langDict[currentLang]?.withHead : langDict[currentLang]?.withoutHead;
+  
+  const priceEl = document.getElementById(`price-${itemId}`);
+  if (priceEl) priceEl.textContent = currentPrice.toLocaleString() + ' ₸';
+  
+  const labelEl = document.getElementById(`label-${itemId}`);
+  if (labelEl) labelEl.textContent = priceLabel;
 }
 
 // ============================================================
@@ -362,9 +327,20 @@ function findItemById(id) {
 function addToCart(id) {
   const item = findItemById(id);
   if (!item) return;
+  
+  let price = item.price;
+  if (item.hasToggle) {
+    const isWithHead = toggleStates[id] !== undefined ? toggleStates[id] : true;
+    price = isWithHead ? item.price : item.priceWithoutHead;
+  }
+  
   const ex = cart.find(c => c.id === id);
-  if (!ex) cart.push({ ...item, quantity: 1 });
-  else ex.quantity += 1;
+  if (!ex) {
+    cart.push({ ...item, quantity: 1, price: price });
+  } else {
+    ex.quantity += 1;
+    ex.price = price;
+  }
   updateCart();
   refreshView();
   runHorse(id);
@@ -413,37 +389,71 @@ function refreshView() {
 //  ОБНОВЛЕНИЕ КОРЗИНЫ
 // ============================================================
 function updateCart() {
-  document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
+  const countEl = document.getElementById('cart-count');
+  const totalEl = document.getElementById('total-sum');
+  const contentEl = document.getElementById('cart-content');
+  const summaryEl = document.getElementById('cart-summary');
+  
+  if (!countEl || !totalEl || !contentEl) return;
+  
+  const isLight = document.body.classList.contains('light-theme');
+  const textColor = isLight ? '#2a1508' : '#fff';
+  const mutedColor = isLight ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)';
+  const goldColor = isLight ? '#c49a2a' : '#f7971e';
+  
+  countEl.textContent = cart.reduce((s, i) => s + i.quantity, 0);
+  
   const sub = cart.reduce((s, i) => s + i.price * i.quantity, 0);
   const serv = Math.round(sub * 0.15);
   const tot = sub + serv;
-  document.getElementById('total-sum').textContent = `${langDict[currentLang]?.total || 'Итого'}: ${tot.toLocaleString()} ₸`;
   
-  const summary = document.getElementById('cart-summary');
-  if (summary && cart.length) {
-    summary.innerHTML = `
-      <div class="cart-summary-row"><span>${langDict[currentLang]?.subtotal}:</span><span>${sub.toLocaleString()} ₸</span></div>
-      <div class="cart-summary-row"><span>${langDict[currentLang]?.service}:</span><span>${serv.toLocaleString()} ₸</span></div>
-      <div class="cart-summary-row total"><span>${langDict[currentLang]?.total}:</span><span>${tot.toLocaleString()} ₸</span></div>
-    `;
-  } else if (summary) { summary.innerHTML = ''; }
+  totalEl.textContent = `${langDict[currentLang]?.total || 'Итого'}: ${tot.toLocaleString()} ₸`;
+  totalEl.style.color = goldColor;
   
-  const backBtn = window.innerWidth <= 480 ? '<button class="back-btn" onclick="toggleCart()">← Продолжить покупки</button>' : '';
-  document.getElementById('cart-content').innerHTML = cart.length ? 
-    backBtn + cart.map(i => `
-      <div class="cart-item">
-        <div class="cart-item-info">
-          <div class="cart-item-name">${i.name.ru || ''} ×${i.quantity}</div>
-          <div>${(i.price * i.quantity).toLocaleString()} ₸</div>
+  if (summaryEl) {
+    if (cart.length) {
+      summaryEl.innerHTML = `
+        <div class="cart-summary-row"><span>${langDict[currentLang]?.subtotal || 'Сумма'}:</span><span>${sub.toLocaleString()} ₸</span></div>
+        <div class="cart-summary-row"><span>${langDict[currentLang]?.service || 'Сервис 15%'}:</span><span>${serv.toLocaleString()} ₸</span></div>
+        <div class="cart-summary-row total" style="color:${goldColor}"><span>${langDict[currentLang]?.total || 'Итого'}:</span><span>${tot.toLocaleString()} ₸</span></div>
+      `;
+    } else {
+      summaryEl.innerHTML = '';
+    }
+  }
+  
+  const backBtn = window.innerWidth <= 480 ? `<button class="back-btn" onclick="toggleCart()" style="color:${goldColor}">← Продолжить покупки</button>` : '';
+  
+  if (cart.length) {
+    contentEl.innerHTML = backBtn + cart.map(i => {
+      const itemName = i.name[currentLang] || i.name.ru || 'Блюдо';
+      let extraInfo = '';
+      if (i.hasToggle) {
+        const isWithHead = toggleStates[i.id] !== undefined ? toggleStates[i.id] : true;
+        extraInfo = isWithHead ? ' 🐑' : '';
+      }
+      return `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name" style="color:${textColor}">${itemName}${extraInfo} ×${i.quantity}</div>
+            <div style="color:${mutedColor}">${(i.price * i.quantity).toLocaleString()} ₸</div>
+          </div>
+          <div class="cart-item-actions">
+            <button onclick="changeQuantity(${i.id},-1)" style="background:#f7971e;color:#fff;">−</button>
+            <button onclick="changeQuantity(${i.id},1)" style="background:#2ecc71;color:#fff;">+</button>
+            <button onclick="removeFromCart(${i.id})" style="background:#e74c3c;color:#fff;">×</button>
+          </div>
         </div>
-        <div class="cart-item-actions">
-          <button onclick="changeQuantity(${i.id},-1)" style="background:#e74c3c;">−</button>
-          <button onclick="changeQuantity(${i.id},1)" style="background:#2ecc71;">+</button>
-          <button onclick="removeFromCart(${i.id})" style="background:#e74c3c;">×</button>
-        </div>
+      `;
+    }).join('');
+  } else {
+    contentEl.innerHTML = `
+      <div class="empty-cart">
+        <i class="fas fa-shopping-basket" style="color:${isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'}"></i>
+        <p style="color:${isLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'}">${langDict[currentLang]?.cart_empty || 'Корзина пуста'}</p>
       </div>
-    `).join('') : 
-    `<div class="empty-cart"><i class="fas fa-shopping-basket"></i><p>Корзина пуста</p></div>`;
+    `;
+  }
 }
 
 function toggleCart() {
@@ -499,7 +509,7 @@ function setLanguage(l) {
 }
 
 // ============================================================
-//  ОФОРМЛЕНИЕ ЗАКАЗА
+//  ОФОРМЛЕНИЕ ЗАКАЗА (с ограничением времени 12:00-23:00)
 // ============================================================
 function openCheckout() {
   if (!cart.length) { showToast('❌ Корзина пуста!', 'error'); return; }
@@ -509,7 +519,8 @@ function openCheckout() {
     sched.innerHTML = cats.map(cat => {
       const tk = (categoryTimeMap[cat] || { timeKey: cat }).timeKey;
       let hours = '';
-      for (let h = 0; h < 24; h++) {
+      // Только с 12:00 до 23:00
+      for (let h = 12; h <= 22; h++) {
         const hh = String(h).padStart(2, '0');
         hours += `<option value="${hh}">${hh}</option>`;
       }
@@ -576,7 +587,8 @@ async function submitOrder() {
       name: i.name,
       price: i.price,
       quantity: i.quantity,
-      category: i.category
+      category: i.category,
+      hasToggle: i.hasToggle || false
     })),
     times,
     special: document.getElementById('special-requests')?.value || '',
@@ -586,25 +598,19 @@ async function submitOrder() {
     timestamp: new Date().toISOString()
   };
   
-  // Сохраняем локально как резерв
   const orders = JSON.parse(localStorage.getItem('orders') || '[]');
   orders.push(order);
   localStorage.setItem('orders', JSON.stringify(orders));
   
-  // Отправляем в облако
   const cloudOk = await saveOrderToCloud(order);
-  
-  // Отправляем в Telegram
   const tgOk = await sendOrderToTelegram(order);
   
-  // Очищаем корзину
   cart = [];
   updateCart();
   refreshView();
   saveCartToStorage();
   closeCheckout();
   
-  // Сбрасываем поля
   document.getElementById('guest-name').value = '';
   document.getElementById('guest-phone').value = '';
   document.getElementById('special-requests').value = '';
@@ -620,16 +626,3 @@ async function submitOrder() {
     showToast('✅ Заказ сохранён локально', 'success');
   }
 }
-
-// ============================================================
-//  ИНИЦИАЛИЗАЦИЯ
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-  loadCartFromStorage();
-  buildNav();
-  renderCategoryPage('salads');
-  updateCart();
-  moveDrop('salads');
-  window.addEventListener('resize', () => moveDrop(currentCategory));
-  window.addEventListener('beforeunload', saveCartToStorage);
-});
