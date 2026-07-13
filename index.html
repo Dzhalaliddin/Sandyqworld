@@ -86,14 +86,6 @@
   </button>
 </div>
 
-<!-- ===== ПЛАВАЮЩАЯ КНОПКА ЧАТА ===== -->
-<div class="chat-fixed">
-  <button class="chat-btn" onclick="openJivoChat()" title="Чат с нами">
-    <i class="fas fa-comment-dots"></i>
-    <span class="chat-pulse"></span>
-  </button>
-</div>
-
 <!-- ===== ОВЕРЛЕЙ КОРЗИНЫ ===== -->
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 
@@ -275,23 +267,6 @@
     </p>
   </div>
 </footer>
-
-<!-- ===== JIVO CHAT INIT ===== -->
-<script>
-  function openJivoChat() {
-    if (typeof jivo_api !== 'undefined') {
-      jivo_api.open();
-    } else {
-      setTimeout(function() {
-        if (typeof jivo_api !== 'undefined') {
-          jivo_api.open();
-        } else {
-          window.open('https://code.jivo.ru/chatpage/jcuKMCR6Cn', '_blank');
-        }
-      }, 500);
-    }
-  }
-</script>
 
 <script src="scripts.js"></script>
 </body>
