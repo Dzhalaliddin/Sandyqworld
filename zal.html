@@ -54,7 +54,6 @@
       color: rgba(0,0,0,0.4);
     }
     
-    /* ===== SVG ЦВЕТА ===== */
     .floor-plan-svg {
       display: block;
       width: 100%;
@@ -126,7 +125,6 @@
     body.light-theme .floor-plan::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
     body.light-theme .floor-plan::-webkit-scrollbar-thumb { background: rgba(196,154,42,0.5); }
 
-    /* ===== КОНТЕЙНЕР ===== */
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -160,7 +158,6 @@
       color: rgba(0,0,0,0.4);
     }
 
-    /* ===== ВКЛАДКИ ЗАЛОВ ===== */
     .hall-tabs {
       display: flex;
       gap: 8px;
@@ -205,7 +202,6 @@
       border-color: #f7971e;
     }
 
-    /* ===== МОДАЛКА БРОНИ ===== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -356,7 +352,6 @@
       background: rgba(255,255,255,0.1);
     }
 
-    /* ===== TOAST ===== */
     .toast {
       position: fixed;
       bottom: 20px;
@@ -389,7 +384,6 @@
       border-color: rgba(0,0,0,0.08);
     }
 
-    /* ===== АДАПТИВ ===== */
     @media (max-width: 768px) {
       body { padding: 10px; }
       .container { padding: 15px 10px; border-radius: 16px; }
@@ -414,47 +408,35 @@
       .modal-card .btn { font-size: 0.8rem; padding: 8px; }
     }
 
-    /* ===== ПЛАВАЮЩИЕ КНОПКИ - МОБИЛЬНАЯ ВЕРСИЯ (ДОБАВЛЕНО) ===== */
     @media (max-width: 768px) {
-      .cart-fixed {
-        bottom: 140px;
-        right: 20px;
-        z-index: 80;
+      #jivo-container,
+      .jivo-iframe-container,
+      .jivo-custom-iframe {
+        transform: scale(0.8) !important;
+        transform-origin: bottom right !important;
       }
-      .cart-fixed .cart-btn {
-        width: 52px;
-        height: 52px;
-        font-size: 1.2rem;
+      .jivo-iframe-container {
+        bottom: 160px !important;
+        right: 10px !important;
       }
-      .chat-fixed {
-        bottom: 70px;
-        right: 20px;
-        z-index: 79;
-      }
-      .chat-fixed .chat-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.4rem;
+      .jivo-custom-iframe {
+        width: 44px !important;
+        height: 44px !important;
       }
     }
     @media (max-width: 480px) {
-      .cart-fixed {
-        bottom: 120px;
-        right: 15px;
+      #jivo-container,
+      .jivo-iframe-container,
+      .jivo-custom-iframe {
+        transform: scale(0.7) !important;
       }
-      .cart-fixed .cart-btn {
-        width: 46px;
-        height: 46px;
-        font-size: 1rem;
+      .jivo-iframe-container {
+        bottom: 140px !important;
+        right: 5px !important;
       }
-      .chat-fixed {
-        bottom: 60px;
-        right: 15px;
-      }
-      .chat-fixed .chat-btn {
-        width: 42px;
-        height: 42px;
-        font-size: 1.2rem;
+      .jivo-custom-iframe {
+        width: 38px !important;
+        height: 38px !important;
       }
     }
   </style>
@@ -470,13 +452,9 @@
     </div>
   </div>
   <h1>🍽️ Бронирование столов</h1>
-  <p class="subtitle">Выберите зал → нажмите на стол → забронируйте</p>
+  <p class="subtitle">Выберите город → зал → нажмите на стол → забронируйте</p>
 
-  <div class="hall-tabs" id="hallTabs">
-    <button class="hall-tab active" data-hall="hall1">🏛️ Зал 1 этаж</button>
-    <button class="hall-tab" data-hall="summer">🌿 Летник</button>
-    <button class="hall-tab" data-hall="hall2">🏛️ Зал 2 этаж</button>
-  </div>
+  <div class="hall-tabs" id="hallTabs"></div>
 
   <div class="floor-plan" id="floorPlan"></div>
 </div>
@@ -532,31 +510,60 @@ function generateTimeOptions() {
 // ============================================================
 //  ГЕНЕРАЦИЯ СТОЛОВ
 // ============================================================
-function genTable(id, type, x, y, w, h, seats, color='#22c55e', room='', customText='') {
+function genTable(id, type, x, y, w, h, color='#22c55e', room='', customText='') {
   const cx = x + w/2, cy = y + h/2;
   let shape = '';
   switch(type) {
-    case 'round': shape = `<circle cx="${cx}" cy="${cy}" r="${w/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
-    case 'rect_h': shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
-    case 'rect_v': shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
-    case 'oval': shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
-    case 'oval_v': shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; break;
+    case 'round': 
+      shape = `<circle cx="${cx}" cy="${cy}" r="${w/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; 
+      break;
+    case 'rect_h': 
+      shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; 
+      break;
+    case 'rect_v': 
+      shape = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; 
+      break;
+    case 'oval': 
+      shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; 
+      break;
+    case 'oval_v': 
+      shape = `<ellipse cx="${cx}" cy="${cy}" rx="${w/2}" ry="${h/2}" fill="${color}" stroke="#2a9d4e" stroke-width="2.5" opacity="0.9"/>`; 
+      break;
   }
   const text = customText || id;
   const label = room ? `<text x="${x+w+8}" y="${y+14}" class="room-label text-room">${room}</text>` : '';
   return `<g class="table-shape" data-table="${id}">${shape}<text x="${cx}" y="${cy+6}" class="table-text text-table">${text}</text>${label}</g>`;
 }
 
+function genRect(x, y, w, h, fill, stroke, label='', labelClass='') {
+  let result = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="1.5" opacity="0.7"/>`;
+  if (label) {
+    const cx = x + w/2;
+    const cy = y + h/2;
+    result += `<text x="${cx}" y="${cy+5}" class="${labelClass || 'room-label text-label'}" text-anchor="middle">${label}</text>`;
+  }
+  return result;
+}
+
+function genCircle(cx, cy, r, fill, stroke, label='', labelClass='') {
+  let result = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.7"/>`;
+  if (label) {
+    result += `<text x="${cx}" y="${cy+5}" class="${labelClass || 'room-label text-label'}" text-anchor="middle">${label}</text>`;
+  }
+  return result;
+}
+
 // ============================================================
-//  ЗАЛЫ
+//  ЗАЛЫ ПО ГОРОДАМ
 // ============================================================
 const halls = {
+  // ===== АЛМАТЫ =====
   hall1: {
     name: 'Зал 1 этаж',
+    city: 'almaty',
     svg: `<svg class="floor-plan-svg" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
       <rect width="1000" height="800" rx="12" class="bg-main"/>
       
-      <!-- ===== КОЛОННЫ ===== -->
       <rect x="95" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="115" y="135" class="room-label text-label" text-anchor="middle">К</text>
       <rect x="240" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="260" y="135" class="room-label text-label" text-anchor="middle">К</text>
       <rect x="430" y="110" width="40" height="40" rx="4" class="bg-accent"/><text x="450" y="135" class="room-label text-label" text-anchor="middle">К</text>
@@ -569,47 +576,42 @@ const halls = {
       <rect x="430" y="640" width="40" height="40" rx="4" class="bg-accent"/><text x="450" y="665" class="room-label text-label" text-anchor="middle">К</text>
       <rect x="620" y="640" width="40" height="40" rx="4" class="bg-accent"/><text x="640" y="665" class="room-label text-label" text-anchor="middle">К</text>
       
-      <!-- ===== WC ===== -->
       <rect x="790" y="50" width="60" height="60" rx="6" class="bg-accent"/><text x="820" y="90" class="room-label text-label" text-anchor="middle">WC</text>
-      
-      <!-- ===== ДЕТСКАЯ ===== -->
       <rect x="890" y="350" width="60" height="400" rx="6" class="bg-accent"/><text x="920" y="550" class="room-label text-label" text-anchor="middle" writing-mode="vertical-rl">ДЕТСК</text>
-      
-      <!-- ===== ВХОД ===== -->
       <rect x="90" y="670" width="80" height="40" rx="8" class="bg-secondary" stroke="#888" stroke-width="2" class="stroke-light"/><text x="130" y="696" class="room-label text-label-light" text-anchor="middle">ВХОД</text>
       
-      <!-- ===== СЦЕНА ===== -->
       <circle cx="450" cy="320" r="50" class="ellipse-stage" stroke="#555" stroke-width="1.5" stroke-dasharray="4,4"/>
       <text x="430" y="326" class="room-label text-label" text-anchor="middle">СЦЕНА</text>
       
-      <!-- ===== СТОЛЫ ===== -->
-      ${genTable(1,'rect_h',290,690,90,35,8)} ${genTable(2,'rect_h',490,690,90,35,8)} ${genTable(3,'rect_h',690,690,90,35,8)}
-      ${genTable(4,'round',300,590,50,50,2)} ${genTable(5,'rect_v',370,580,35,50,2)} ${genTable(6,'oval',540,590,90,40,6)}
-      ${genTable(7,'rect_v',685,525,40,55,6)} ${genTable(8,'rect_v',820,510,35,40,2)} ${genTable(9,'rect_h',30,410,55,32,4)}
-      ${genTable(10,'rect_v',165,530,35,45,4)} ${genTable(11,'round',320,430,50,50,2)} ${genTable(12,'round',430,390,50,50,2)}
-      ${genTable(13,'round',530,450,50,50,2)} ${genTable(14,'round',580,380,50,50,2)} ${genTable(15,'round',50,220,55,55,4)}
-      ${genTable(16,'rect_v',165,320,35,45,4)} ${genTable(18,'round',320,230,50,50,2)} ${genTable(19,'round',430,190,50,50,2)}
-      ${genTable(20,'round',525,180,50,50,2)} ${genTable(21,'rect_h',30,50,55,32,4)} ${genTable(22,'oval',175,50,90,40,6)}
-      ${genTable(23,'oval',355,50,90,40,6)} ${genTable(24,'oval',525,50,90,40,6)} ${genTable(25,'oval',685,50,90,40,6)}
-      ${genTable(26,'oval_v',700,210,40,85,6)} ${genTable(27,'rect_v',685,315,40,55,6)} ${genTable(28,'rect_v',685,425,40,55,6)}
-      ${genTable(29,'round',580,250,50,50,2)} ${genTable(30,'round',320,330,50,50,2)} ${genTable(31,'rect_v',165,430,35,45,4)}
-      ${genTable(32,'rect_v',162,175,40,55,6)}
+      ${genTable(1,'rect_h',290,690,90,35)} ${genTable(2,'rect_h',490,690,90,35)} ${genTable(3,'rect_h',690,690,90,35)}
+      ${genTable(4,'round',300,590,50,50)} ${genTable(5,'rect_v',370,580,35,50)} ${genTable(6,'oval',540,590,90,40)}
+      ${genTable(7,'rect_v',685,525,40,55)} ${genTable(8,'rect_v',820,510,35,40)} ${genTable(9,'rect_h',30,410,55,32)}
+      ${genTable(10,'rect_v',165,530,35,45)} ${genTable(11,'round',320,430,50,50)} ${genTable(12,'round',430,390,50,50)}
+      ${genTable(13,'round',530,450,50,50)} ${genTable(14,'round',580,380,50,50)} ${genTable(15,'round',50,220,55,55)}
+      ${genTable(16,'rect_v',165,320,35,45)} ${genTable(18,'round',320,230,50,50)} ${genTable(19,'round',430,190,50,50)}
+      ${genTable(20,'round',525,180,50,50)} ${genTable(21,'rect_h',30,50,55,32)} ${genTable(22,'oval',175,50,90,40)}
+      ${genTable(23,'oval',355,50,90,40)} ${genTable(24,'oval',525,50,90,40)} ${genTable(25,'oval',685,50,90,40)}
+      ${genTable(26,'oval_v',700,210,40,85)} ${genTable(27,'rect_v',685,315,40,55)} ${genTable(28,'rect_v',685,425,40,55)}
+      ${genTable(29,'round',580,250,50,50)} ${genTable(30,'round',320,330,50,50)} ${genTable(31,'rect_v',165,430,35,45)}
+      ${genTable(32,'rect_v',162,175,40,55)}
     </svg>`
   },
   summer: {
     name: 'Летник',
+    city: 'almaty',
     svg: `<svg class="floor-plan-svg" viewBox="0 0 700 750" xmlns="http://www.w3.org/2000/svg">
       <rect width="700" height="750" rx="12" class="bg-main"/>
       <rect x="145" y="390" width="40" height="140" rx="4" class="bg-accent"/><text x="165" y="465" class="room-label text-label" writing-mode="vertical-rl" text-anchor="middle">ТЕРРАСА</text>
-      ${genTable(55,'round',60,50,50,50,2)} ${genTable(54,'rect_h',50,170,90,35,4)} ${genTable(53,'rect_h',50,300,90,35,4)}
-      ${genTable(52,'rect_h',50,440,90,35,4)} ${genTable(51,'rect_h',50,590,90,35,4)} ${genTable(45,'rect_v',225,130,35,50,4)}
-      ${genTable(44,'rect_v',225,255,35,50,4)} ${genTable(42,'rect_h',225,490,90,35,4)} ${genTable(41,'rect_h',225,595,90,35,4)}
-      ${genTable(46,'rect_v',495,610,40,55,6)} ${genTable(47,'round',570,470,50,50,2)} ${genTable(49,'round',610,340,50,50,2)}
-      ${genTable(50,'round',510,275,55,55,4,'#22c55e')}
+      ${genTable(55,'round',60,50,50,50)} ${genTable(54,'rect_h',50,170,90,35)} ${genTable(53,'rect_h',50,300,90,35)}
+      ${genTable(52,'rect_h',50,440,90,35)} ${genTable(51,'rect_h',50,590,90,35)} ${genTable(45,'rect_v',225,130,35,50)}
+      ${genTable(44,'rect_v',225,255,35,50)} ${genTable(42,'rect_h',225,490,90,35)} ${genTable(41,'rect_h',225,595,90,35)}
+      ${genTable(46,'rect_v',495,610,40,55)} ${genTable(47,'round',570,470,50,50)} ${genTable(49,'round',610,340,50,50)}
+      ${genTable(50,'round',510,275,55,55)}
     </svg>`
   },
   hall2: {
     name: 'Зал 2 этаж',
+    city: 'almaty',
     svg: `<svg class="floor-plan-svg" viewBox="0 0 750 780" xmlns="http://www.w3.org/2000/svg">
       <rect width="750" height="780" rx="12" class="bg-main"/>
       <rect x="0" y="520" width="330" height="18" class="bg-gray"/>
@@ -617,41 +619,151 @@ const halls = {
       <rect x="245" y="505" width="70" height="18" class="bg-gray"/>
       <rect x="455" y="700" width="40" height="40" rx="4" class="bg-accent"/><text x="475" y="725" class="room-label text-label" text-anchor="middle">Л</text>
       
-      <!-- ===== КАБИНЕТЫ ===== -->
-      ${genTable(71,'rect_h',90,35,110,55,6,'#22c55e','Бозайғыр','2/1')}
-      ${genTable(72,'rect_h',390,35,140,55,7,'#22c55e','Саржайлау','2/7')}
-      ${genTable(80,'rect_h',385,120,65,35,2,'#cfcfcf')}
+      ${genTable(71,'rect_h',90,35,110,55,'#22c55e','Бозайғыр','2/1')}
+      ${genTable(72,'rect_h',390,35,140,55,'#22c55e','Саржайлау','2/7')}
+      ${genTable(80,'rect_h',385,120,65,35,'#cfcfcf')}
       
-      <!-- ===== СТОЛЫ ===== -->
-      ${genTable(81,'rect_v',470,160,35,50,2)} ${genTable(82,'rect_v',470,240,35,50,2)}
-      ${genTable(83,'rect_v',470,315,35,50,2)} ${genTable(84,'rect_v',470,390,35,50,2)}
-      ${genTable(85,'rect_v',470,470,35,50,2)} ${genTable(86,'rect_v',470,545,35,50,2)}
+      ${genTable(81,'rect_v',470,160,35,50)} ${genTable(82,'rect_v',470,240,35,50)}
+      ${genTable(83,'rect_v',470,315,35,50)} ${genTable(84,'rect_v',470,390,35,50)}
+      ${genTable(85,'rect_v',470,470,35,50)} ${genTable(86,'rect_v',470,545,35,50)}
       
-      <!-- ===== КАБИНЕТЫ С КРУГЛЫМИ СТОЛАМИ ===== -->
-      ${genTable(73,'round',585,205,55,55,6,'#22c55e','Қосбасар','2/2')}
-      ${genTable(75,'round',585,345,55,55,6,'#22c55e','Жазғы қайғы','2/3')}
-      ${genTable(74,'round',585,485,55,55,6,'#22c55e','Көкіл','2/4')}
-      ${genTable(76,'rect_v',585,610,40,85,6,'#22c55e','Кішкентай','2/5')}
+      ${genTable(73,'round',585,205,55,55,'#22c55e','Қосбасар','2/2')}
+      ${genTable(75,'round',585,345,55,55,'#22c55e','Жазғы қайғы','2/3')}
+      ${genTable(74,'round',585,485,55,55,'#22c55e','Көкіл','2/4')}
+      ${genTable(76,'rect_v',585,610,40,85,'#22c55e','Кішкентай','2/5')}
       
-      <!-- ===== ОБЫЧНЫЕ СТОЛЫ ===== -->
-      ${genTable(64,'round',75,585,50,50,4)} ${genTable(65,'round',145,595,55,55,6)} ${genTable(66,'round',215,585,50,50,4)}
-      ${genTable(63,'round',55,685,50,50,2)} ${genTable(62,'round',140,700,50,50,2)} ${genTable(61,'round',230,700,50,50,2)}
+      ${genTable(64,'round',75,585,50,50)} ${genTable(65,'round',145,595,55,55)} ${genTable(66,'round',215,585,50,50)}
+      ${genTable(63,'round',55,685,50,50)} ${genTable(62,'round',140,700,50,50)} ${genTable(61,'round',230,700,50,50)}
       
-      <!-- ===== ПАНОРАМА ===== -->
       <text x="170" y="535" class="room-label text-label-light" text-anchor="middle">Панорама в зал</text>
-      
-      <!-- ===== ҚҰДАЛЫҚ ===== -->
       <text x="275" y="520" class="room-label text-label-light" text-anchor="start">Құдалық</text>
+    </svg>`
+  },
+  
+  // ===== АСТАНА =====
+  banquet: {
+    name: 'Банкетный зал (2 этаж)',
+    city: 'astana',
+    svg: `<svg class="floor-plan-svg" viewBox="0 0 1100 750" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1100" height="750" rx="12" class="bg-main"/>
+      
+      <rect x="385" y="155" width="40" height="40" rx="4" class="bg-accent"/><text x="405" y="180" class="room-label text-label" text-anchor="middle">К</text>
+      <rect x="385" y="395" width="40" height="40" rx="4" class="bg-accent"/><text x="405" y="420" class="room-label text-label" text-anchor="middle">К</text>
+      <rect x="780" y="155" width="40" height="40" rx="4" class="bg-accent"/><text x="800" y="180" class="room-label text-label" text-anchor="middle">К</text>
+      <rect x="780" y="395" width="40" height="40" rx="4" class="bg-accent"/><text x="800" y="420" class="room-label text-label" text-anchor="middle">К</text>
+      
+      ${genRect(300,592,205,48,'#3a3d4e','#666','ЛИФТ','room-label text-label')}
+      ${genRect(965,492,48,200,'#3a3d4e','#666','WC','room-label text-label')}
+      ${genRect(968,255,72,70,'#3a3d4e','#666','СТАФ','room-label text-label')}
+      ${genRect(35,645,80,50,'#2a2d3e','#555','','')}
+      <text x="75" y="675" class="room-label text-label" text-anchor="middle">ЛЕСТН</text>
+      ${genCircle(540,300,46,'#2a2d3e','#555','СЦЕНА','room-label text-label')}
+      
+      ${genTable(203,'rect_h',105,85,80,30)}
+      ${genTable(204,'rect_v',295,70,30,50)}
+      ${genTable(205,'rect_v',490,55,30,40)}
+      ${genTable(206,'rect_v',640,70,30,50)}
+      ${genTable(207,'rect_v',835,70,30,50)}
+      
+      ${genTable(210,'rect_h',235,185,80,30)}
+      ${genTable(202,'rect_h',100,265,80,30)}
+      
+      ${genTable(209,'rect_h',235,305,80,30)}
+      ${genTable(208,'round',245,405,45,45)}
+      ${genTable(201,'rect_h',100,445,80,30)}
+      
+      ${genTable(211,'rect_v',420,285,30,45)}
+      ${genTable(212,'rect_v',490,185,30,45)}
+      ${genTable(213,'rect_v',580,185,30,45)}
+      ${genTable(214,'rect_v',680,265,30,45)}
+      
+      ${genTable(215,'rect_v',455,370,30,45)}
+      ${genTable(216,'rect_v',525,405,30,45)}
+      ${genTable(217,'rect_v',605,405,30,45)}
+      
+      ${genTable(226,'rect_v',665,345,30,45)}
+      
+      ${genTable(218,'rect_v',855,200,30,50)}
+      ${genTable(219,'rect_v',855,385,30,50)}
+      
+      ${genTable(220,'rect_v',525,525,30,50)}
+      ${genTable(221,'rect_v',675,525,30,50)}
+      ${genTable(222,'round',800,500,45,45)}
+      ${genTable(225,'rect_v',885,505,30,40)}
+      
+      ${genTable(224,'rect_h',640,620,100,35)}
+      ${genTable(223,'rect_h',835,640,80,35)}
+    </svg>`
+  },
+  hall3: {
+    name: 'Зал 3 этаж',
+    city: 'astana',
+    svg: `<svg class="floor-plan-svg" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
+      <rect width="700" height="500" rx="12" class="bg-main"/>
+      
+      ${genTable(307,'rect_v',70,90,30,50)}
+      ${genTable(306,'rect_v',70,315,30,50)}
+      
+      ${genTable(305,'rect_h',275,135,100,35)}
+      ${genTable(304,'rect_h',275,300,100,35)}
+      
+      ${genTable(303,'rect_v',530,90,30,50)}
+      
+      ${genRect(30,430,50,40,'#2a2d3e','#555','','')}
+      <text x="55" y="455" class="room-label text-label" text-anchor="middle">ЛЕСТН</text>
+      
+      ${genRect(630,30,50,50,'#3a3d4e','#666','WC','room-label text-label')}
     </svg>`
   }
 };
 
-let currentHall = 'hall1';
-let selectedTable = null;
+// ============================================================
+//  ПОЛУЧЕНИЕ ТЕКУЩЕГО ГОРОДА
+// ============================================================
+function getCurrentCity() {
+  return localStorage.getItem('sandyq_city') || 'almaty';
+}
+
+// ============================================================
+//  ПОСТРОЕНИЕ ВКЛАДОК
+// ============================================================
+function buildHallTabs() {
+  const container = document.getElementById('hallTabs');
+  const currentCity = getCurrentCity();
+  
+  let html = '';
+  let first = true;
+  
+  for (const [key, hall] of Object.entries(halls)) {
+    if (hall.city === currentCity) {
+      const active = first ? 'active' : '';
+      html += `<button class="hall-tab ${active}" data-hall="${key}">🏛️ ${hall.name}</button>`;
+      first = false;
+    }
+  }
+  
+  container.innerHTML = html;
+  
+  // Добавляем обработчики
+  container.querySelectorAll('.hall-tab').forEach(btn => {
+    btn.addEventListener('click', function() {
+      loadHall(this.dataset.hall);
+    });
+  });
+  
+  // Загружаем первый зал
+  const firstTab = container.querySelector('.hall-tab');
+  if (firstTab) {
+    loadHall(firstTab.dataset.hall);
+  }
+}
 
 // ============================================================
 //  ЗАГРУЗКА ЗАЛА
 // ============================================================
+let currentHall = 'hall1';
+let selectedTable = null;
+
 function loadHall(hallId) {
   currentHall = hallId;
   document.querySelectorAll('.hall-tab').forEach(t => t.classList.remove('active'));
@@ -674,9 +786,8 @@ function openBookingModal(tableId) {
   const card = document.getElementById('modalCard');
   const timeOpts = generateTimeOptions();
   
-  // Определяем город для отображения
-  const cityName = localStorage.getItem('sandyq_city') === 'astana' ? 'Астана' : 'Алматы';
-  const cityAddress = localStorage.getItem('sandyq_city') === 'astana' 
+  const cityName = getCurrentCity() === 'astana' ? 'Астана' : 'Алматы';
+  const cityAddress = getCurrentCity() === 'astana' 
     ? 'Сарайшык 34/3' 
     : 'Абылайхана 55 / Алимжанова 55';
   
@@ -751,7 +862,7 @@ async function submitBooking() {
   
   const fullName = `${surname} ${name}`;
   const hallName = halls[currentHall].name;
-  const city = localStorage.getItem('sandyq_city') || 'almaty';
+  const city = getCurrentCity();
   const cityName = city === 'astana' ? 'Астана' : 'Алматы';
   const cityAddress = city === 'astana' ? 'Сарайшык 34/3' : 'Абылайхана 55 / Алимжанова 55';
   
@@ -799,13 +910,32 @@ async function submitBooking() {
 }
 
 // ============================================================
+//  СЛУШАЕМ СМЕНУ ГОРОДА
+// ============================================================
+window.addEventListener('storage', function(e) {
+  if (e.key === 'sandyq_city') {
+    buildHallTabs();
+  }
+});
+
+// ============================================================
 //  ИНИЦИАЛИЗАЦИЯ
 // ============================================================
-document.querySelectorAll('.hall-tab').forEach(btn => btn.addEventListener('click', () => loadHall(btn.dataset.hall)));
-document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('DOMContentLoaded', function() {
+  buildHallTabs();
+});
 
-loadHall('hall1');
+document.getElementById('modalOverlay').addEventListener('click', function(e) { 
+  if (e.target === this) closeModal(); 
+});
+document.addEventListener('keydown', function(e) { 
+  if (e.key === 'Escape') closeModal(); 
+});
+
+// Если DOM уже загружен
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  buildHallTabs();
+}
 </script>
 </body>
 </html>
