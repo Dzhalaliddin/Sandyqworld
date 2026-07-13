@@ -698,13 +698,11 @@ function switchCity(city) {
     whatsappEl.href = `https://wa.me/${data.whatsapp.replace(/[\s\-\(\)]/g, '')}`;
   }
   
-  // Очищаем корзину и размеры при смене города
   cart = [];
   sizeStates = {};
   saveCartToStorage();
   updateCart();
   
-  // Перерисовываем меню
   buildNav();
   renderCategoryPage(currentCategory);
   renderTopDishes();
@@ -899,12 +897,10 @@ function switchCategory(k) {
   moveDrop(k);
   renderCategoryPage(k);
   
-  if (window.innerWidth <= 768) {
-    const mobileCards = document.getElementById('mobile-cat-cards');
-    const backBtn = document.getElementById('mobile-back-btn');
-    if (mobileCards) mobileCards.style.display = 'none';
-    if (backBtn) backBtn.style.display = 'block';
-  }
+  // Обновляем активный класс для мобильных карточек
+  document.querySelectorAll('.mobile-cat-card').forEach(card => {
+    card.classList.toggle('active', card.getAttribute('onclick')?.includes(`'${k}'`));
+  });
 }
 
 function moveDrop(k) {
@@ -1057,6 +1053,11 @@ function renderCategoryPage(k) {
   
   pg.style.display = 'block';
   pg.innerHTML = `<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div><div class="menu-grid">${c.items.map(renderItem).join('')}</div>`;
+  
+  // Обновляем активный класс для мобильных карточек
+  document.querySelectorAll('.mobile-cat-card').forEach(card => {
+    card.classList.toggle('active', card.getAttribute('onclick')?.includes(`'${k}'`));
+  });
 }
 
 function renderItem(item) {
@@ -1067,7 +1068,6 @@ function renderItem(item) {
   const cookingTime = item.cookingTime ? item.cookingTime[currentLang] : '';
   const isLiked = wishlist.includes(item.id);
 
-  // Товар с переключателем размера
   if (item.hasSizeToggle) {
     const isLarge = sizeStates[item.id] !== undefined ? sizeStates[item.id] === 'large' : false;
     const currentPrice = isLarge ? item.priceLarge : item.price;
@@ -1113,7 +1113,6 @@ function renderItem(item) {
     </div>`;
   }
 
-  // Товар с переключателем (С головой/Без головы)
   if (item.hasToggle) {
     const isWithHead = toggleStates[item.id] !== undefined ? toggleStates[item.id] : true;
     const currentPrice = isWithHead ? item.price : item.priceWithoutHead;
@@ -1162,7 +1161,6 @@ function renderItem(item) {
     </div>`;
   }
 
-  // Обычный товар
   const ci = cart.find(c => c.id === item.id);
   const qty = ci ? ci.quantity : 0;
 
@@ -1218,7 +1216,6 @@ function updateItemCard(id) {
     footer.appendChild(actions);
   }
 
-  // Товар с переключателем размера
   if (item.hasSizeToggle) {
     const isLarge = sizeStates[id] !== undefined ? sizeStates[id] === 'large' : false;
     const currentPrice = isLarge ? item.priceLarge : item.price;
@@ -1256,7 +1253,6 @@ function updateItemCard(id) {
     return;
   }
 
-  // Товар с переключателем (С головой/Без головы)
   if (item.hasToggle) {
     const isWithHead = toggleStates[id] !== undefined ? toggleStates[id] : true;
     const currentPrice = isWithHead ? item.price : item.priceWithoutHead;
@@ -1294,7 +1290,6 @@ function updateItemCard(id) {
     return;
   }
 
-  // Обычный товар
   const cartItem = cart.find(c => c.id === id);
   const qty = cartItem ? cartItem.quantity : 0;
   
@@ -1390,10 +1385,8 @@ function loadCartFromStorage() {
 function updateCart() {
   const countEl = document.getElementById('cart-count');
   const cartCountEl = document.getElementById('cartCount');
-  const totalEl = document.getElementById('total-sum');
   const contentEl = document.getElementById('cart-content');
   const summaryEl = document.getElementById('cart-summary');
-  const footerEl = document.getElementById('cart-footer');
   
   if (!contentEl) return;
   
@@ -1409,10 +1402,6 @@ function updateCart() {
   const serv = Math.round(sub * 0.15);
   const tot = sub + serv;
   
-  if (totalEl) {
-    totalEl.textContent = `${langDict[currentLang]?.total || 'Итого'}: ${tot.toLocaleString()} ₸`;
-  }
-  
   if (summaryEl) {
     if (cart.length) {
       summaryEl.innerHTML = `
@@ -1423,10 +1412,6 @@ function updateCart() {
     } else {
       summaryEl.innerHTML = '';
     }
-  }
-  
-  if (footerEl) {
-    footerEl.style.display = cart.length > 0 ? 'block' : 'none';
   }
   
   if (cart.length > 0) {
@@ -1912,43 +1897,6 @@ function showReviews() {
 }
 
 // ============================================================
-//  JIVO ЧАТ
-// ============================================================
-function openJivoChat() {
-  const modal = document.getElementById('chatModal');
-  const iframe = document.getElementById('chatIframe');
-  
-  if (modal) {
-    modal.classList.add('active');
-    if (iframe) {
-      iframe.src = 'https://code.jivo.ru/chatpage/jcuKMCR6Cn';
-    }
-  } else {
-    window.open('https://code.jivo.ru/chatpage/jcuKMCR6Cn', '_blank');
-  }
-}
-
-function closeChatModal() {
-  const modal = document.getElementById('chatModal');
-  if (modal) {
-    modal.classList.remove('active');
-    // Очищаем iframe при закрытии
-    const iframe = document.getElementById('chatIframe');
-    if (iframe) {
-      setTimeout(() => { iframe.src = 'about:blank'; }, 500);
-    }
-  }
-}
-
-// Закрытие по клику на оверлей
-document.addEventListener('click', function(e) {
-  const modal = document.getElementById('chatModal');
-  if (modal && e.target === modal) {
-    closeChatModal();
-  }
-});
-
-// ============================================================
 //  ПАРАЛЛАКС
 // ============================================================
 document.addEventListener('scroll', function() {
@@ -1995,6 +1943,11 @@ function openCheckout() {
   }
   const dateInput = document.getElementById('order-date');
   if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+  
+  // Сбрасываем чекбокс оферты при открытии
+  const agreeCheckbox = document.getElementById('oferta-agree-modal');
+  if (agreeCheckbox) agreeCheckbox.checked = false;
+  
   const modal = document.getElementById('checkout-modal');
   if (modal) modal.classList.add('open');
 }
@@ -2017,6 +1970,13 @@ function showToast(message, type = 'success') {
 //  ОТПРАВКА ЗАКАЗА
 // ============================================================
 async function submitOrder() {
+  // ===== ПРОВЕРКА ОФЕРТЫ =====
+  const agreeCheckbox = document.getElementById('oferta-agree-modal');
+  if (!agreeCheckbox || !agreeCheckbox.checked) {
+    showToast('❌ Пожалуйста, согласитесь с договором оферты!', 'error');
+    return;
+  }
+  
   const nameInput = document.getElementById('guest-name');
   const phoneInput = document.getElementById('guest-phone');
   const dateInput = document.getElementById('order-date');
