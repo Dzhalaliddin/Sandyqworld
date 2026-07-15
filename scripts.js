@@ -719,7 +719,64 @@ function switchCity(city) {
 })();
 
 // ============================================================
-//  TELEGRAM / JSONBIN
+//  ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ СЛИЯНИЯ
+// ============================================================
+function mergeArrays(localArr, cloudArr, idKey = 'id') {
+  const map = new Map();
+  localArr.forEach(item => { map.set(item[idKey], item); });
+  cloudArr.forEach(item => {
+    if (!map.has(item[idKey])) {
+      map.set(item[idKey], item);
+    }
+  });
+  return Array.from(map.values());
+}
+
+// ============================================================
+//  СОХРАНЕНИЕ ЗАКАЗА В ОБЛАКО
+// ============================================================
+async function saveOrderToCloud(order) {
+  try {
+    const res = await fetch(JSONBIN_URL + '/latest', { 
+      headers: { 'X-Master-Key': JSONBIN_KEY } 
+    });
+    
+    if (!res.ok) throw new Error('Ошибка загрузки из облака');
+    
+    const data = await res.json();
+    const orders = data.record.orders || [];
+    const bookings = data.record.bookings || [];
+    
+    orders.push(order);
+    
+    const updateRes = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 
+        'X-Master-Key': JSONBIN_KEY, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ 
+        orders: orders, 
+        bookings: bookings,
+        reviews: data.record.reviews || []
+      })
+    });
+    
+    if (!updateRes.ok) throw new Error('Ошибка сохранения в облако');
+    
+    console.log('✅ Заказ сохранён в облако');
+    return true;
+  } catch(e) {
+    console.warn('Ошибка сохранения в облако, сохраняю локально:', e);
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    return false;
+  }
+}
+
+// ============================================================
+//  TELEGRAM
 // ============================================================
 async function sendOrderToTelegram(order) {
   const message = `🍽️ <b>НОВЫЙ ЗАКАЗ #${String(order.id).slice(-6)}</b>\n📍 <b>${order.restaurant}</b>\n👤 ${order.guest.name}\n📞 ${order.guest.phone}\n📅 ${order.date||'—'}\n💰 ${order.total.toLocaleString()} ₸`;
@@ -754,27 +811,6 @@ async function sendReviewToTelegram(review) {
     });
     return true;
   } catch(e) { return false; }
-}
-
-async function saveOrderToCloud(order) {
-  try {
-    const res = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } });
-    const data = await res.json();
-    const orders = data.record.orders || [];
-    orders.push(order);
-    await fetch(JSONBIN_URL, {
-      method: 'PUT',
-      headers: { 'X-Master-Key': JSONBIN_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orders, bookings: data.record.bookings || [] })
-    });
-    return true;
-  } catch(e) {
-    console.warn('Ошибка облака, сохраняю локально:', e);
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    orders.push(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    return false;
-  }
 }
 
 async function saveReviewToCloud(review) {
@@ -897,7 +933,6 @@ function switchCategory(k) {
   moveDrop(k);
   renderCategoryPage(k);
   
-  // Обновляем активный класс для мобильных карточек
   document.querySelectorAll('.mobile-cat-card').forEach(card => {
     card.classList.toggle('active', card.getAttribute('onclick')?.includes(`'${k}'`));
   });
@@ -1054,7 +1089,6 @@ function renderCategoryPage(k) {
   pg.style.display = 'block';
   pg.innerHTML = `<div class="category-page-header"><i class="fas ${c.icon}"></i> ${c.name[currentLang]}</div><div class="menu-grid">${c.items.map(renderItem).join('')}</div>`;
   
-  // Обновляем активный класс для мобильных карточек
   document.querySelectorAll('.mobile-cat-card').forEach(card => {
     card.classList.toggle('active', card.getAttribute('onclick')?.includes(`'${k}'`));
   });
@@ -1944,7 +1978,6 @@ function openCheckout() {
   const dateInput = document.getElementById('order-date');
   if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
   
-  // Сбрасываем чекбокс оферты при открытии
   const agreeCheckbox = document.getElementById('oferta-agree-modal');
   if (agreeCheckbox) agreeCheckbox.checked = false;
   
@@ -1970,7 +2003,6 @@ function showToast(message, type = 'success') {
 //  ОТПРАВКА ЗАКАЗА
 // ============================================================
 async function submitOrder() {
-  // ===== ПРОВЕРКА ОФЕРТЫ =====
   const agreeCheckbox = document.getElementById('oferta-agree-modal');
   if (!agreeCheckbox || !agreeCheckbox.checked) {
     showToast('❌ Пожалуйста, согласитесь с договором оферты!', 'error');
@@ -2015,12 +2047,20 @@ async function submitOrder() {
     guest: { name, phone },
     date,
     items: cart.map(i => ({
-      id: i.id, name: i.name, price: i.price, quantity: i.quantity,
-      category: i.category, hasToggle: i.hasToggle || false, hasSizeToggle: i.hasSizeToggle || false, variant: i.variant || ''
+      id: i.id, 
+      name: i.name, 
+      price: i.price, 
+      quantity: i.quantity,
+      category: i.category, 
+      hasToggle: i.hasToggle || false, 
+      hasSizeToggle: i.hasSizeToggle || false, 
+      variant: i.variant || ''
     })),
     times,
     special: specialInput ? specialInput.value || '' : '',
-    subtotal: sub, service: serv, total: tot,
+    subtotal: sub, 
+    service: serv, 
+    total: tot,
     timestamp: new Date().toISOString()
   };
 
@@ -2028,6 +2068,7 @@ async function submitOrder() {
   orders.push(order);
   localStorage.setItem('orders', JSON.stringify(orders));
 
+  showToast('⏳ Сохранение заказа...', '');
   const cloudOk = await saveOrderToCloud(order);
   const tgOk = await sendOrderToTelegram(order);
 
@@ -2036,15 +2077,21 @@ async function submitOrder() {
   updateCart();
   saveCartToStorage();
   closeCheckout();
+  
   if (nameInput) nameInput.value = '';
   if (phoneInput) phoneInput.value = '';
   if (specialInput) specialInput.value = '';
   document.querySelectorAll('#time-schedule select').forEach(el => el.value = '');
 
-  if (tgOk && cloudOk) showToast('✅ Заказ отправлен в Telegram и сохранён в облаке!', 'success');
-  else if (tgOk) showToast('✅ Заказ отправлен в Telegram (облако недоступно)', 'success');
-  else if (cloudOk) showToast('✅ Заказ сохранён в облаке (Telegram недоступен)', 'success');
-  else showToast('✅ Заказ сохранён локально', 'success');
+  if (tgOk && cloudOk) {
+    showToast('✅ Заказ отправлен в Telegram и сохранён в облаке!', 'success');
+  } else if (tgOk) {
+    showToast('✅ Заказ отправлен в Telegram (облако недоступно)', 'success');
+  } else if (cloudOk) {
+    showToast('✅ Заказ сохранён в облаке (Telegram недоступен)', 'success');
+  } else {
+    showToast('✅ Заказ сохранён локально', 'success');
+  }
 
   renderTopDishes();
 }
